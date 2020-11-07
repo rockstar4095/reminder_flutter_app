@@ -27,5 +27,17 @@ class MainScreen extends StatelessWidget {
 }
 
 final _reminders = [
-  Reminder(title: 'title', dateTime: DateTime.parse('1970-01-01T00:00:00.000000Z')),
+  Reminder(
+    title: 'Убрать в комнате',
+    dateTime: DateTime.parse('2020-11-08T01:50:00.000000Z'),
+    description: 'поменять перегоревшую лампочку',
+  ),
+  Reminder(
+    title: 'Оплатить кредит',
+    dateTime: DateTime.parse('2020-11-09T21:45:00.000000Z'),
+  ),
+  Reminder(
+    title: 'Поздравить Васю с др',
+    dateTime: DateTime.parse('2020-11-09T12:54:00.000000Z'),
+  ),
 ];
