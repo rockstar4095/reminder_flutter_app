@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_flutter_app/screens/main_screen.dart';
+import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
 
 void main() => runApp(App());
 

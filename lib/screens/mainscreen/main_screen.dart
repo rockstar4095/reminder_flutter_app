@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
-import 'package:reminder_flutter_app/screens/reminder_item.dart';
+import 'package:reminder_flutter_app/screens/mainscreen/reminder_dialog.dart';
+import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -10,7 +11,7 @@ class MainScreen extends StatelessWidget {
         title: Text('Напоминания'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => ReminderDialog.open(context),
         child: Icon(Icons.add),
       ),
       body: _remindersList(context, _reminders),
