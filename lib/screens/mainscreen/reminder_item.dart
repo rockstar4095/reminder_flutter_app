@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 
@@ -32,7 +35,7 @@ class ReminderItem extends StatelessWidget {
           print('debug: item tap!');
         },
         onLongPress: () {
-          print('debug: item long press!');
+          context.read<MainBloc>().add(SelectModeActivated());
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reminder_flutter_app/bloc/bloc_builder.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_dialog.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
@@ -6,15 +8,22 @@ import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final content = Scaffold(
       appBar: AppBar(
         title: Text('Напоминания'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ReminderDialog.open(context),
+        onPressed: () {
+          ReminderDialog.open(context);
+        },
         child: Icon(Icons.add),
       ),
       body: _remindersList(context, _reminders),
+    );
+
+    return BlocProvider(
+      create: (context) => Blocs.mainBloc(),
+      child: content,
     );
   }
 

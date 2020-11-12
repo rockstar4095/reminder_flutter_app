@@ -75,7 +75,7 @@ class _ReminderDialog extends StatelessWidget {
   Widget _dateField(BuildContext context) => FlatButton(
         child: Text('12.11.2020'),
         onPressed: () {
-          _unfocus(context);
+          _unFocus(context);
           showDatePicker(
             context: context,
             initialDate: DateTime.now(),
@@ -88,7 +88,7 @@ class _ReminderDialog extends StatelessWidget {
   Widget _timeField(BuildContext context) => FlatButton(
         child: Text('00:21'),
         onPressed: () {
-          _unfocus(context);
+          _unFocus(context);
           showTimePicker(
             context: context,
             initialTime: TimeOfDay.now(),
@@ -96,7 +96,7 @@ class _ReminderDialog extends StatelessWidget {
         },
       );
 
-  void _unfocus(BuildContext context) {
+  void _unFocus(BuildContext context) {
     FocusScopeNode focusScope = FocusScope.of(context);
     if (!focusScope.hasPrimaryFocus) {
       focusScope.unfocus();
