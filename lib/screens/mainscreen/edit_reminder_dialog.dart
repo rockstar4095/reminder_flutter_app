@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_flutter_app/utils/widgets.dart';
 
-class ReminderDialog {
-  static void open(BuildContext context) => showModalBottomSheet(
+class EditReminderDialog {
+  static void open(BuildContext context, {int reminderId}) =>
+      showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => _ReminderDialog(),
+        builder: (context) => _EditReminderDialog(reminderId: reminderId),
       );
 }
 
-class _ReminderDialog extends StatelessWidget {
+class _EditReminderDialog extends StatelessWidget {
+  final int reminderId;
+
+  _EditReminderDialog({this.reminderId});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      child: Container(
-        height: double.infinity,
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: _body(context),
-          ),
-        ),
-      ),
+      child: modalBottomSheet(body: _body(context)),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
+import 'package:reminder_flutter_app/screens/mainscreen/view_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 
 class ReminderItem extends StatelessWidget {
@@ -9,12 +10,14 @@ class ReminderItem extends StatelessWidget {
   final int index;
   final Reminder _current;
   final Reminder _previous;
+  final int reminderId;
 
   ReminderItem({
     @required this.reminders,
     @required this.index,
   })  : _current = reminders[index],
-        _previous = index > 0 ? reminders[index - 1] : null;
+        _previous = index > 0 ? reminders[index - 1] : null,
+        reminderId = reminders[index].id;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class ReminderItem extends StatelessWidget {
             if (state.isSelectedModeActive) {
               context.read<MainBloc>().onItemSelect(index);
             } else {
-              // open reminder summary
+              ViewReminderDialog.open(context, reminderId);
             }
           },
           onLongPress: () => context.read<MainBloc>().onItemSelect(index),
