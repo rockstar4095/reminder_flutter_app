@@ -30,13 +30,26 @@ class ReminderItem extends StatelessWidget {
   bool isDateDividerNeeded() =>
       index == 0 || _previous.dateTime.isNotSameDate(_current.dateTime);
 
-  Widget _item(BuildContext context) => InkWell(
-        onTap: () {
-          print('debug: item tap!');
-        },
-        onLongPress: () {
-          context.read<MainBloc>().add(SelectModeActivated());
-        },
+  Widget _item(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) =>
+            previous.selectedIndexes != current.selectedIndexes,
+        builder: (context, state) => InkWell(
+          onTap: () {
+            if (state.isSelectedModeActive) {
+              context.read<MainBloc>().onItemSelect(index);
+            } else {
+              // open reminder summary
+            }
+          },
+          onLongPress: () => context.read<MainBloc>().onItemSelect(index),
+          child: _itemContent(context, state),
+        ),
+      );
+
+  Widget _itemContent(BuildContext context, MainState state) => Container(
+        color: state.selectedIndexes.contains(index)
+            ? Colors.grey
+            : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(

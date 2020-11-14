@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/bloc_builder.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_dialog.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
@@ -11,6 +12,9 @@ class MainScreen extends StatelessWidget {
     final content = Scaffold(
       appBar: AppBar(
         title: Text('Напоминания'),
+        actions: [
+          _deleteIcon(context),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -26,6 +30,21 @@ class MainScreen extends StatelessWidget {
       child: content,
     );
   }
+
+  Widget _deleteIcon(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) =>
+            previous.selectedIndexes != current.selectedIndexes,
+        builder: (context, state) {
+          if (state.selectedIndexes.isEmpty) return SizedBox();
+
+          return IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              context.read<MainBloc>().deleteReminders();
+            },
+          );
+        },
+      );
 
   Widget _remindersList(BuildContext context, List<Reminder> reminders) =>
       ListView.builder(

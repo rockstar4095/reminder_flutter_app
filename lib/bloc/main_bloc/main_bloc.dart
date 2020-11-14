@@ -12,4 +12,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       yield RegularMainState();
     }
   }
+
+  void deleteReminders() {
+    print('debug: delete reminders: ${state.selectedIndexes}');
+  }
 }
