@@ -34,24 +34,27 @@ class ReminderItem extends StatelessWidget {
 
   Widget _item(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
-            previous.selectedIndexes != current.selectedIndexes,
-        builder: (context, state) => InkWell(
-          onTap: () {
-            if (state.isSelectedModeActive) {
-              context.read<MainBloc>().onItemSelect(index);
-            } else {
-              ViewReminderDialog.open(context, reminderId);
-            }
-          },
-          onLongPress: () => context.read<MainBloc>().onItemSelect(index),
-          child: _itemContent(context, state),
-        ),
+            previous.quantityOfSelectedItems !=
+                current.quantityOfSelectedItems ||
+            previous.isSelectedModeActive != current.isSelectedModeActive,
+        builder: (context, state) {
+          return InkWell(
+            onTap: () {
+              if (state.isSelectedModeActive) {
+                context.read<MainBloc>().onItemSelect(reminderId);
+              } else {
+                ViewReminderDialog.open(context, reminderId);
+              }
+            },
+            onLongPress: () =>
+                context.read<MainBloc>().onItemSelect(reminderId),
+            child: _itemContent(context),
+          );
+        },
       );
 
-  Widget _itemContent(BuildContext context, MainState state) => Container(
-        color: state.selectedIndexes.contains(index)
-            ? Colors.grey
-            : Colors.transparent,
+  Widget _itemContent(BuildContext context) => Container(
+        color: _current.isSelected ? Colors.grey : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:reminder_flutter_app/model/reminder.dart';
 
 abstract class MainEvent extends Equatable {
   @override
@@ -7,14 +8,36 @@ abstract class MainEvent extends Equatable {
 }
 
 class ItemSelected extends MainEvent {
-  final int index;
+  final List<Reminder> reminders;
 
   ItemSelected({
-    @required this.index,
+    @required this.reminders,
   });
 
   @override
-  List<Object> get props => [index];
+  List<Object> get props => [reminders];
 }
 
 class SelectModeDisabled extends MainEvent {}
+
+class RemindersLoaded extends MainEvent {
+  final List<Reminder> reminders;
+
+  RemindersLoaded({@required this.reminders});
+
+  @override
+  List<Object> get props => [reminders];
+}
+
+class DeletePressed extends MainEvent {}
+
+class SaveReminderPressed extends MainEvent {
+  final Reminder reminder;
+
+  SaveReminderPressed({
+    @required this.reminder,
+  });
+
+  @override
+  List<Object> get props => [reminder];
+}

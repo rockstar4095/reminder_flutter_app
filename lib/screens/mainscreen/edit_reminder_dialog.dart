@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
 
 class EditReminderDialog {
@@ -44,7 +48,7 @@ class _EditReminderDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _save(),
+                _save(context),
                 _cancel(context),
               ],
             ),
@@ -96,9 +100,18 @@ class _EditReminderDialog extends StatelessWidget {
     }
   }
 
-  Widget _save() => RaisedButton(
+  Widget _save(BuildContext context) => RaisedButton(
         child: Text('Сохранить'),
-        onPressed: () {},
+        onPressed: () {
+          final reminder = Reminder(
+            id: null,
+            title: 'test reminder title',
+            description: 'test reminder description ${DateTime.now().toLocal()}',
+            dateTime: DateTime.now(),
+          );
+
+          context.read<MainBloc>().add(SaveReminderPressed(reminder: reminder));
+        },
       );
 
   Widget _cancel(BuildContext context) => RaisedButton(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/bloc_builder.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
-import 'package:reminder_flutter_app/model/reminder.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
 
@@ -22,54 +22,43 @@ class MainScreen extends StatelessWidget {
         },
         child: Icon(Icons.add),
       ),
-      body: _remindersList(context, _reminders),
+      body: _remindersList(context),
     );
 
     return BlocProvider(
-      create: (context) => Blocs.mainBloc(),
+      create: (context) => Blocs.mainBloc(context),
       child: content,
     );
   }
 
   Widget _deleteIcon(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
-            previous.selectedIndexes != current.selectedIndexes,
+            current.isSelectedModeActive != previous.isSelectedModeActive,
         builder: (context, state) {
-          if (state.selectedIndexes.isEmpty) return SizedBox();
+          if (!state.isSelectedModeActive)
+            return SizedBox();
 
           return IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              context.read<MainBloc>().deleteReminders();
+              context.read<MainBloc>().add(
+                    DeletePressed()
+                  );
             },
           );
         },
       );
 
-  Widget _remindersList(BuildContext context, List<Reminder> reminders) =>
-      ListView.builder(
-        itemCount: reminders.length,
-        itemBuilder: (context, index) {
-          return ReminderItem(reminders: reminders, index: index);
+  Widget _remindersList(BuildContext context) =>
+      BlocBuilder<MainBloc, MainState>(
+        builder: (context, state) {
+          return ListView.builder(
+            itemCount: state.reminders.length,
+            itemBuilder: (context, index) {
+              return ReminderItem(reminders: state.reminders, index: index);
+            },
+          );
         },
       );
 }
 
-final _reminders = [
-  Reminder(
-    id: 0,
-    title: 'Убрать в комнате',
-    dateTime: DateTime.parse('2020-11-08T01:50:00.000000Z'),
-    description: 'поменять перегоревшую лампочку',
-  ),
-  Reminder(
-    id: 1,
-    title: 'Оплатить кредит',
-    dateTime: DateTime.parse('2020-11-09T21:45:00.000000Z'),
-  ),
-  Reminder(
-    id: 2,
-    title: 'Поздравить Васю с др',
-    dateTime: DateTime.parse('2020-11-09T12:54:00.000000Z'),
-  ),
-];

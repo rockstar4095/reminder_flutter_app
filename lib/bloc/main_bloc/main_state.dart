@@ -2,38 +2,28 @@ part of 'main_bloc.dart';
 
 class MainState extends Equatable {
   final bool isSelectedModeActive;
-  final int lastSelectedIndex;
-  final List<int> selectedIndexes;
+  final List<Reminder> reminders;
+  final int quantityOfSelectedItems;
 
   MainState({
     this.isSelectedModeActive = false,
-    this.lastSelectedIndex,
-    this.selectedIndexes,
-  });
+    this.reminders,
+  }) : quantityOfSelectedItems =
+            reminders.where((reminder) => reminder.isSelected).length;
 
   MainState copyWith({
     bool isSelectedModeActive,
-    int lastSelectedIndex,
+    List<Reminder> reminders,
   }) =>
       MainState(
         isSelectedModeActive: isSelectedModeActive ?? this.isSelectedModeActive,
-        lastSelectedIndex: lastSelectedIndex ?? this.lastSelectedIndex,
-        selectedIndexes: List<int>()..addAll(selectedIndexes),
-      ).._addRemoveIndex(lastSelectedIndex);
-
-  void _addRemoveIndex(int index) {
-    if (selectedIndexes.contains(index)) {
-      selectedIndexes.remove(index);
-    } else {
-      if (index == null) return;
-      selectedIndexes.add(index);
-    }
-  }
+        reminders: List<Reminder>()..addAll(reminders ?? this.reminders),
+      );
 
   @override
   List<Object> get props => [
         isSelectedModeActive,
-        lastSelectedIndex,
-        selectedIndexes,
+        reminders,
+        quantityOfSelectedItems,
       ];
 }
