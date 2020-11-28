@@ -22,3 +22,32 @@ class TitleChanged extends EditReminderEvent {
   @override
   List<Object> get props => [title];
 }
+
+class DescriptionChanged extends EditReminderEvent {
+  final String description;
+
+  DescriptionChanged({@required this.description});
+
+  @override
+  List<Object> get props => [description];
+}
+
+class DateChanged extends EditReminderEvent {
+  final DateTime date;
+
+  DateChanged({@required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
+class TimeChanged extends EditReminderEvent {
+  final TimeOfDay time;
+
+  TimeChanged({@required this.time});
+
+  @override
+  List<Object> get props => [time];
+}
+
+class DialogOpened extends EditReminderEvent {}

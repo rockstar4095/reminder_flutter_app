@@ -3,29 +3,34 @@ part of 'edit_reminder_bloc.dart';
 class EditReminderState extends Equatable {
   final String title;
   final String description;
-  final DateTime dateTime;
+  final DateTime date;
+  final TimeOfDay time;
 
   EditReminderState({
     @required this.title,
     @required this.description,
-    @required this.dateTime,
+    @required this.date,
+    @required this.time,
   });
 
   EditReminderState copyWith({
     String title,
     String description,
-    DateTime dateTime,
+    DateTime date,
+    TimeOfDay time,
   }) =>
       EditReminderState(
         title: title ?? this.title,
         description: description ?? this.description,
-        dateTime: dateTime ?? this.dateTime,
+        date: date ?? this.date,
+        time: time ?? this.time,
       );
 
   @override
   List<Object> get props => [
         title,
         description,
-        dateTime,
+        date,
+        time,
       ];
 }
