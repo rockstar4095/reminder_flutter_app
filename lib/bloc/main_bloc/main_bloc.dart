@@ -30,7 +30,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is RemindersLoaded) {
       yield state.copyWith(reminders: event.reminders);
     } else if (event is SaveReminderPressed) {
-      await _saveReminder(event.reminder);
       _loadReminders();
     } else if (event is DeletePressed) {
       await _deleteReminders();
@@ -58,7 +57,4 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Future<void> _deleteReminders() async => _repository.deleteReminders(
         state.reminders.where((reminder) => reminder.isSelected).toList(),
       );
-
-  Future<void> _saveReminder(Reminder reminder) =>
-      _repository.insertReminder(reminder);
 }

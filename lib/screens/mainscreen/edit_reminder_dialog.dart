@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc/edit_reminder_dialog_bloc/edit_reminder_bloc.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
 
@@ -34,7 +33,7 @@ class _EditReminderDialog extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            _titleField(),
+            _titleField(context),
             _descriptionField(),
             SizedBox(height: 20),
             Row(
@@ -56,10 +55,12 @@ class _EditReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _titleField() => TextField(
+  Widget _titleField(BuildContext context) => TextField(
         decoration: InputDecoration(
           hintText: 'Название',
         ),
+        onChanged: (input) =>
+            context.read<EditReminderBloc>().add(TitleChanged(title: input)),
       );
 
   Widget _descriptionField() => TextField(
@@ -110,7 +111,7 @@ class _EditReminderDialog extends StatelessWidget {
             dateTime: DateTime.now(),
           );
 
-          context.read<MainBloc>().add(SaveReminderPressed(reminder: reminder));
+          context.read<EditReminderBloc>().add(SavePressed(reminder: reminder));
           Navigator.of(context).pop();
         },
       );

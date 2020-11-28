@@ -22,13 +22,4 @@ class RemindersLoaded extends MainEvent {
 
 class DeletePressed extends MainEvent {}
 
-class SaveReminderPressed extends MainEvent {
-  final Reminder reminder;
-
-  SaveReminderPressed({
-    @required this.reminder,
-  });
-
-  @override
-  List<Object> get props => [reminder];
-}
+class SaveReminderPressed extends MainEvent {}
