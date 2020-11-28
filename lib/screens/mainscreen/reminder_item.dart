@@ -61,13 +61,12 @@ class ReminderItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: _reminderContent(context),
-                  ),
+                  Expanded(child: _reminderContent(context)),
                   Text(_current.dateTime.hhmm()),
                 ],
               ),
-              if (_current.description.isNotEmpty) _reminderDescription(context)
+              if (_current.description.isNotEmpty)
+                _reminderDescription(context),
             ],
           ),
         ),

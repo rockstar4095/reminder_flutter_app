@@ -41,10 +41,8 @@ class MainDaoImpl implements MainDao {
   }
 
   @override
-  Future<ReminderEntity> getReminder(int id) {
-    // TODO: implement getReminder
-    return null;
-  }
+  Future<ReminderEntity> getReminder(int id) async =>
+      (await _getBox()).getAt(id);
 
   @override
   Future<void> insertReminder(ReminderEntity reminderEntity) async =>

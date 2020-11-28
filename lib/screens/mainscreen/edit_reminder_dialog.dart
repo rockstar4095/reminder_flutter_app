@@ -111,6 +111,7 @@ class _EditReminderDialog extends StatelessWidget {
           );
 
           context.read<MainBloc>().add(SaveReminderPressed(reminder: reminder));
+          Navigator.of(context).pop();
         },
       );
 

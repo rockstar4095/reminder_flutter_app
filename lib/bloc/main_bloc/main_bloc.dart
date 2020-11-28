@@ -9,26 +9,7 @@ part 'main_state.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepository _repository;
 
-  MainBloc(this._repository)
-      : super(
-          MainState(reminders: <Reminder>[]),
-        ) {
-    // _repository.insertReminder(Reminder(
-    //   id: 0,
-    //   title: 'Убрать в комнате',
-    //   dateTime: DateTime.parse('2020-11-08T01:50:00.000000Z'),
-    //   description: 'поменять перегоревшую лампочку',
-    // ));
-    // _repository.insertReminder(Reminder(
-    //   id: 1,
-    //   title: 'Оплатить кредит',
-    //   dateTime: DateTime.parse('2020-11-09T21:45:00.000000Z'),
-    // ));
-    // _repository.insertReminder(Reminder(
-    //   id: 2,
-    //   title: 'Поздравить Васю с др',
-    //   dateTime: DateTime.parse('2020-11-09T12:54:00.000000Z'),
-    // ));
+  MainBloc(this._repository) : super(MainState(reminders: <Reminder>[])) {
     _loadReminders();
   }
 
@@ -49,12 +30,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is RemindersLoaded) {
       yield state.copyWith(reminders: event.reminders);
     } else if (event is SaveReminderPressed) {
-
-      // list with reminders (main_screen.dart) doesn't rebuild after this
       await _saveReminder(event.reminder);
       _loadReminders();
     } else if (event is DeletePressed) {
-      await deleteReminders();
+      await _deleteReminders();
       _loadReminders();
       add(SelectModeDisabled());
     }
@@ -67,7 +46,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     state.reminders[reminderIndex] =
         reminder.copyWith(isSelected: !reminder.isSelected);
 
-    add(ItemSelected(reminders: state.reminders));
+    add(ItemSelected());
 
     final selectedRemindersQuantity =
         state.reminders.where((reminder) => reminder.isSelected).length;
@@ -76,7 +55,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  Future<void> deleteReminders() async => _repository.deleteReminders(
+  Future<void> _deleteReminders() async => _repository.deleteReminders(
         state.reminders.where((reminder) => reminder.isSelected).toList(),
       );
 

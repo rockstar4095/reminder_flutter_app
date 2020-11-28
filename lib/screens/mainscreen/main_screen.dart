@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
-import 'package:reminder_flutter_app/bloc_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
 
@@ -26,7 +25,7 @@ class MainScreen extends StatelessWidget {
     );
 
     return BlocProvider(
-      create: (context) => Blocs.mainBloc(context),
+      create: (context) => context.read<MainBloc>(),
       child: content,
     );
   }
@@ -35,15 +34,12 @@ class MainScreen extends StatelessWidget {
         buildWhen: (previous, current) =>
             current.isSelectedModeActive != previous.isSelectedModeActive,
         builder: (context, state) {
-          if (!state.isSelectedModeActive)
-            return SizedBox();
+          if (!state.isSelectedModeActive) return SizedBox();
 
           return IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              context.read<MainBloc>().add(
-                    DeletePressed()
-                  );
+              context.read<MainBloc>().add(DeletePressed());
             },
           );
         },
@@ -61,4 +57,3 @@ class MainScreen extends StatelessWidget {
         },
       );
 }
-

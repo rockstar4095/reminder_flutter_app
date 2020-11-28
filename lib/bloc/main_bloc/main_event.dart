@@ -7,16 +7,7 @@ abstract class MainEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ItemSelected extends MainEvent {
-  final List<Reminder> reminders;
-
-  ItemSelected({
-    @required this.reminders,
-  });
-
-  @override
-  List<Object> get props => [reminders];
-}
+class ItemSelected extends MainEvent {}
 
 class SelectModeDisabled extends MainEvent {}
 

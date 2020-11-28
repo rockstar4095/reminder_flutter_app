@@ -26,7 +26,7 @@ class MainRepositoryImpl implements MainRepository {
 
   @override
   Future<Reminder> getReminder(int id) async =>
-      await (await _mainDao.getReminder(id)).toReminder();
+      (await _mainDao.getReminder(id)).toReminder();
 
   @override
   Future<void> updateReminder(Reminder reminder) async =>
