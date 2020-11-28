@@ -4,6 +4,7 @@ import 'package:reminder_flutter_app/bloc/edit_reminder_dialog_bloc/edit_reminde
 import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
+import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
 
 class EditReminderDialog {
@@ -13,11 +14,16 @@ class EditReminderDialog {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => BlocProvider(
-            create: (context) => EditReminderBloc(
-                  context.read<MainRepository>(),
-                  context.read<MainBloc>(),
-                ),
-            child: _EditReminderDialog(reminderId: reminderId)),
+          create: (context) => EditReminderBloc(
+            context.read<MainRepository>(),
+            context.read<MainBloc>(),
+          ),
+          // Scaffold wrapper to be able to show SnackBar
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: _EditReminderDialog(reminderId: reminderId),
+          ),
+        ),
       );
 }
 
@@ -80,12 +86,16 @@ class _EditReminderDialog extends StatelessWidget {
             .add(DescriptionChanged(description: input)),
       );
 
-  Widget _dateField(BuildContext context) => FlatButton(
-        child: Text('12.11.2020'),
-        onPressed: () {
-          _unFocus(context);
-          _showDatePicker(context);
-        },
+  Widget _dateField(BuildContext context) =>
+      BlocBuilder<EditReminderBloc, EditReminderState>(
+        buildWhen: (previous, current) => previous.date != current.date,
+        builder: (context, state) => FlatButton(
+          child: Text(state.date.ddMMyy()),
+          onPressed: () {
+            _unFocus(context);
+            _showDatePicker(context);
+          },
+        ),
       );
 
   Future<void> _showDatePicker(BuildContext context) async {
@@ -99,12 +109,16 @@ class _EditReminderDialog extends StatelessWidget {
     context.read<EditReminderBloc>().add(DateChanged(date: date));
   }
 
-  Widget _timeField(BuildContext context) => FlatButton(
-        child: Text('00:21'),
-        onPressed: () {
-          _unFocus(context);
-          _showTimePicker(context);
-        },
+  Widget _timeField(BuildContext context) =>
+      BlocBuilder<EditReminderBloc, EditReminderState>(
+        buildWhen: (previous, current) => previous.time != current.time,
+        builder: (context, state) => FlatButton(
+          child: Text(state.time.format(context)),
+          onPressed: () {
+            _unFocus(context);
+            _showTimePicker(context);
+          },
+        ),
       );
 
   Future<void> _showTimePicker(BuildContext context) async {
@@ -126,23 +140,38 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _save(BuildContext context) => RaisedButton(
         child: Text('Сохранить'),
         onPressed: () {
-          final dateTime = DateTime(
-              context.read<EditReminderBloc>().state.date.year,
-              context.read<EditReminderBloc>().state.date.month,
-              context.read<EditReminderBloc>().state.date.day,
-              context.read<EditReminderBloc>().state.time.hour,
-              context.read<EditReminderBloc>().state.time.minute,
-          );
+          final title = context.read<EditReminderBloc>().state.title;
+          if (title.isEmpty) {
+            _showEmptyTitleSnack(context);
+            return;
+          }
 
-          final reminder = Reminder(
-            id: null,
-            title: context.read<EditReminderBloc>().state.title,
-            description: context.read<EditReminderBloc>().state.description,
-            dateTime: dateTime,
-          );
+          final reminder = _formReminder(context);
           context.read<EditReminderBloc>().add(SavePressed(reminder: reminder));
           Navigator.of(context).pop();
         },
+      );
+
+  void _showEmptyTitleSnack(BuildContext context) =>
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Укажите название'),
+        ),
+      );
+
+  Reminder _formReminder(BuildContext context) => Reminder(
+    id: null,
+    title: context.read<EditReminderBloc>().state.title,
+    description: context.read<EditReminderBloc>().state.description,
+    dateTime: _getDateTime(context),
+  );
+
+  DateTime _getDateTime(BuildContext context) => DateTime(
+        context.read<EditReminderBloc>().state.date.year,
+        context.read<EditReminderBloc>().state.date.month,
+        context.read<EditReminderBloc>().state.date.day,
+        context.read<EditReminderBloc>().state.time.hour,
+        context.read<EditReminderBloc>().state.time.minute,
       );
 
   Widget _cancel(BuildContext context) => RaisedButton(
