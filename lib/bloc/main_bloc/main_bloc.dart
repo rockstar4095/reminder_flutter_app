@@ -43,14 +43,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   @override
   Stream<MainState> mapEventToState(MainEvent event) async* {
     if (event is ItemSelected) {
-      yield state.copyWith(
-        isSelectedModeActive: true,
-      );
+      yield state.copyWith(isSelectedModeActive: true);
     } else if (event is SelectModeDisabled) {
       yield state.copyWith(isSelectedModeActive: false);
     } else if (event is RemindersLoaded) {
       yield state.copyWith(reminders: event.reminders);
     } else if (event is SaveReminderPressed) {
+
+      // list with reminders (main_screen.dart) doesn't rebuild after this
       await _saveReminder(event.reminder);
       _loadReminders();
     } else if (event is DeletePressed) {

@@ -89,13 +89,11 @@ class ReminderItem extends StatelessWidget {
 
   Widget _reminderDescription(BuildContext context) => Align(
         alignment: Alignment.centerLeft,
-        child: Flexible(
-          child: RichText(
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              text: _current.description,
-              style: Theme.of(context).textTheme.caption,
-            ),
+        child: RichText(
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            text: _current.description,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
       );
