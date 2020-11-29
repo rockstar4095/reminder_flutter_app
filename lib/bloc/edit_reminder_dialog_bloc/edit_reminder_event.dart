@@ -50,4 +50,11 @@ class TimeChanged extends EditReminderEvent {
   List<Object> get props => [time];
 }
 
-class DialogOpened extends EditReminderEvent {}
+class ExistingReminderOpened extends EditReminderEvent {
+  final Reminder reminder;
+
+  ExistingReminderOpened({@required this.reminder});
+
+  @override
+  List<Object> get props => [reminder];
+}

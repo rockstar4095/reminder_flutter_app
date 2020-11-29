@@ -12,7 +12,7 @@ extension ReminderToReminderEntity on Reminder {
 
 extension RemindersToReminderEntitites on List<Reminder> {
   List<ReminderEntity> toReminderEntitiesList() {
-    if (this == null) return null;
+    if (this == null) return [];
     return List.generate(
       length,
       (index) => this[index].toReminderEntity(),
