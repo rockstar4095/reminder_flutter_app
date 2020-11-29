@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
@@ -9,7 +10,7 @@ part 'main_state.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepository _repository;
 
-  MainBloc(this._repository) : super(MainState(reminders: <Reminder>[])) {
+  MainBloc(this._repository) : super(MainState.initialState()) {
     _loadReminders();
   }
 
@@ -35,7 +36,26 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       await _deleteReminders();
       _loadReminders();
       add(SelectModeDisabled());
+    } else if (event is ReminderOpened) {
+      _loadReminder(event.reminderId);
+    } else if (event is OpenedReminderLoaded) {
+      yield state.copyWith(
+        openedTitle: event.openedTitle,
+        openedDescription: event.openedDescription,
+        openedDateTime: event.openedDateTime,
+      );
     }
+  }
+
+  Future<void> _loadReminder(int id) async {
+    final reminder = await _getReminder(id);
+    add(
+      OpenedReminderLoaded(
+        openedTitle: reminder.title,
+        openedDescription: reminder.description,
+        openedDateTime: reminder.dateTime,
+      ),
+    );
   }
 
   void onItemSelect(int reminderId) {
@@ -57,4 +77,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Future<void> _deleteReminders() async => _repository.deleteReminders(
         state.reminders.where((reminder) => reminder.isSelected).toList(),
       );
+
+  Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
 }
