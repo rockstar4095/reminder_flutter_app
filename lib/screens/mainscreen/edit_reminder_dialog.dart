@@ -17,21 +17,18 @@ class EditReminderDialog {
           create: (context) => EditReminderBloc(
             context.read<MainRepository>(),
             context.read<MainBloc>(),
+            reminderId,
           ),
           // Scaffold wrapper to be able to show SnackBar
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            body: _EditReminderDialog(reminderId: reminderId),
+            body: _EditReminderDialog(),
           ),
         ),
       );
 }
 
 class _EditReminderDialog extends StatelessWidget {
-  final int reminderId;
-
-  _EditReminderDialog({this.reminderId});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,22 +65,48 @@ class _EditReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _titleField(BuildContext context) => TextField(
-        decoration: InputDecoration(
-          hintText: 'Название',
-        ),
-        onChanged: (input) =>
-            context.read<EditReminderBloc>().add(TitleChanged(title: input)),
+  Widget _titleField(BuildContext context) =>
+      BlocBuilder<EditReminderBloc, EditReminderState>(
+        buildWhen: (previous, current) => previous.title != current.title,
+        builder: (context, state) {
+          TextEditingController controller = TextEditingController();
+          if (state.title.isNotEmpty) {
+            controller.text = state.title;
+            controller.selection = TextSelection.fromPosition(
+              TextPosition(offset: controller.text.length),
+            );
+          }
+          return TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: 'Название'),
+            onChanged: (input) => context.read<EditReminderBloc>().add(
+                  TitleChanged(title: input),
+                ),
+          );
+        },
       );
 
-  Widget _descriptionField(BuildContext context) => TextField(
-        maxLines: 5,
-        decoration: InputDecoration(
-          hintText: 'Описание',
-        ),
-        onChanged: (input) => context
-            .read<EditReminderBloc>()
-            .add(DescriptionChanged(description: input)),
+  Widget _descriptionField(BuildContext context) =>
+      BlocBuilder<EditReminderBloc, EditReminderState>(
+        buildWhen: (previous, current) =>
+            previous.description != current.description,
+        builder: (context, state) {
+          TextEditingController controller = TextEditingController();
+          if (state.description.isNotEmpty) {
+            controller.text = state.description;
+            controller.selection = TextSelection.fromPosition(
+              TextPosition(offset: controller.text.length),
+            );
+          }
+          return TextField(
+            controller: controller,
+            maxLines: 5,
+            decoration: InputDecoration(hintText: 'Описание'),
+            onChanged: (input) => context.read<EditReminderBloc>().add(
+                  DescriptionChanged(description: input),
+                ),
+          );
+        },
       );
 
   Widget _dateField(BuildContext context) =>
@@ -160,11 +183,11 @@ class _EditReminderDialog extends StatelessWidget {
       );
 
   Reminder _formReminder(BuildContext context) => Reminder(
-    id: null,
-    title: context.read<EditReminderBloc>().state.title,
-    description: context.read<EditReminderBloc>().state.description,
-    dateTime: _getDateTime(context),
-  );
+        id: context.read<EditReminderBloc>().currentReminderId,
+        title: context.read<EditReminderBloc>().state.title,
+        description: context.read<EditReminderBloc>().state.description,
+        dateTime: _getDateTime(context),
+      );
 
   DateTime _getDateTime(BuildContext context) => DateTime(
         context.read<EditReminderBloc>().state.date.year,

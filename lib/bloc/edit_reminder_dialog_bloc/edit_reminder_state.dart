@@ -6,6 +6,17 @@ class EditReminderState extends Equatable {
   final DateTime date;
   final TimeOfDay time;
 
+  factory EditReminderState.initialState() => EditReminderState(
+        title: '',
+        description: '',
+        date: DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+        ),
+        time: TimeOfDay.now(),
+      );
+
   EditReminderState({
     @required this.title,
     @required this.description,
