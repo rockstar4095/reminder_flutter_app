@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
+import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
 
 class ViewReminderDialog {
-  static void open(BuildContext context, int reminderId) =>
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => _ViewReminderDialog(reminderId),
-      );
+  static void open(BuildContext context, int reminderId) {
+    context.read<MainBloc>().add(ReminderOpened(reminderId: reminderId));
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _ViewReminderDialog(reminderId),
+    );
+  }
 }
 
 class _ViewReminderDialog extends StatelessWidget {
@@ -28,15 +34,14 @@ class _ViewReminderDialog extends StatelessWidget {
           children: [
             Stack(
               children: [
-                _title(context),
+                _dateTime(context),
                 _closeDialogButton(context),
               ],
             ),
             SizedBox(height: 12),
-            _reminderTitle(context),
-            SizedBox(height: 24),
-            _reminderDescription(context),
-            SizedBox(height: 24),
+            _title(context),
+            SizedBox(height: 16),
+            _description(context),
             _editButton(context),
           ],
         ),
@@ -52,27 +57,51 @@ class _ViewReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _title(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 24),
-          child: Text(
-            '14.11.20 в 12:25',
-            style: Theme.of(context).textTheme.headline5,
-          ),
+  Widget _dateTime(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) =>
+            previous.openedDateTime != current.openedDateTime,
+        builder: (context, state) {
+          final String date = state.openedDateTime.ddMMyy();
+          final String time = state.openedDateTime.hhmm();
+
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: Text(
+                '$date в $time',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+          );
+        },
+      );
+
+  Widget _title(BuildContext context) =>
+      BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) =>
+            previous.openedTitle != current.openedTitle,
+        builder: (context, state) => Text(
+          state.openedTitle,
+          style: Theme.of(context).textTheme.headline6,
         ),
       );
 
-  Widget _reminderTitle(BuildContext context) => Text(
-        'Сходить в магазин',
-        style: Theme.of(context).textTheme.headline6,
-      );
-
-  Widget _reminderDescription(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text(
-          'Купить: Картофель, Морковь, Лук, Чеснок, Петрушка, Укроп, Яблоки.',
-          style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-        ),
+  Widget _description(BuildContext context) =>
+      BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) =>
+            previous.openedDescription != current.openedDescription,
+        builder: (context, state) {
+          if (state.openedDescription.isEmpty) return SizedBox();
+          return Padding(
+            padding:
+                const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 24),
+            child: Text(
+              state.openedDescription,
+              style:
+                  Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+            ),
+          );
+        },
       );
 
   Widget _editButton(BuildContext context) => SizedBox(

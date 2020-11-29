@@ -23,3 +23,31 @@ class RemindersLoaded extends MainEvent {
 class DeletePressed extends MainEvent {}
 
 class SaveReminderPressed extends MainEvent {}
+
+class ReminderOpened extends MainEvent {
+  final int reminderId;
+
+  ReminderOpened({@required this.reminderId});
+
+  @override
+  List<Object> get props => [reminderId];
+}
+
+class OpenedReminderLoaded extends MainEvent {
+  final String openedTitle;
+  final String openedDescription;
+  final DateTime openedDateTime;
+
+  OpenedReminderLoaded({
+    @required this.openedTitle,
+    @required this.openedDescription,
+    @required this.openedDateTime,
+  });
+
+  @override
+  List<Object> get props => [
+        openedTitle,
+        openedDescription,
+        openedDateTime,
+      ];
+}
