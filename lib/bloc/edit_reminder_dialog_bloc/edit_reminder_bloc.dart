@@ -1,10 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
+import 'package:timezone/data/latest_all.dart' as timeZone;
+import 'package:timezone/timezone.dart' as timeZone;
 
 part 'edit_reminder_event.dart';
 part 'edit_reminder_state.dart';
@@ -27,9 +31,10 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
   @override
   Stream<EditReminderState> mapEventToState(EditReminderEvent event) async* {
     if (event is SavePressed) {
-      _isReminderUpdate()
+      final insertedReminder = _isReminderUpdate()
           ? await _updateReminder(event.reminder)
           : await _saveReminder(event.reminder);
+      await _saveNotification(insertedReminder);
       _mainBloc.add(SaveReminderPressed());
     } else if (event is TitleChanged) {
       yield state.copyWith(title: event.title);
@@ -56,17 +61,57 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
   TimeOfDay _getReminderTime(DateTime dateTime) =>
       TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
 
-  Future<void> _saveReminder(Reminder reminder) =>
+  Future<Reminder> _saveReminder(Reminder reminder) =>
       _repository.insertReminder(reminder);
 
-  Future<void> _updateReminder(Reminder reminder) =>
+  Future<Reminder> _updateReminder(Reminder reminder) =>
       _repository.updateReminder(reminder);
 
-  Future<void> _openReminder(int id) async {
-    add(ExistingReminderOpened(reminder: await _getReminder(id)));
-  }
+  Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
 
   bool _isReminderUpdate() => currentReminderId != null;
 
-  Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
+  Future<void> _openReminder(int id) async =>
+      add(ExistingReminderOpened(reminder: await _getReminder(id)));
+
+  Future<void> _saveNotification(Reminder reminder) async {
+    final _notificationsPlugin = FlutterLocalNotificationsPlugin();
+    await _initTimeZone();
+    await _notificationsPlugin.initialize(InitializationSettings(
+      android: AndroidInitializationSettings('app_icon'),
+    ));
+    await _notificationsPlugin.zonedSchedule(
+      reminder.id ?? 999999,
+      reminder.title,
+      reminder.description,
+      _scheduledDateTime(reminder),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your channel id',
+          'your channel name',
+          'your channel description',
+        ),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+    );
+  }
+
+  Future<void> _initTimeZone() async {
+    final platform = MethodChannel('reminder_flutter_app');
+    timeZone.initializeTimeZones();
+    final String timeZoneName = await platform.invokeMethod('getTimeZoneName');
+    timeZone.setLocalLocation(timeZone.getLocation(timeZoneName));
+  }
+
+  timeZone.TZDateTime _scheduledDateTime(Reminder reminder) =>
+      timeZone.TZDateTime.now(timeZone.local).add(_scheduleDuration(reminder));
+
+  Duration _scheduleDuration(Reminder reminder) {
+    final userSetDuration = reminder.dateTime.difference(DateTime.now());
+    return userSetDuration.inMilliseconds > 0
+        ? userSetDuration
+        : Duration(milliseconds: 1000);
+  }
 }
