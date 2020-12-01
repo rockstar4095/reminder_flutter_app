@@ -2,11 +2,11 @@ import 'package:hive/hive.dart';
 import 'package:reminder_flutter_app/entity/reminder_entity.dart';
 
 abstract class MainDao {
-  Future<void> insertReminder(ReminderEntity reminderEntity);
+  Future<ReminderEntity> insertReminder(ReminderEntity reminderEntity);
 
   Future<void> deleteReminder(ReminderEntity reminderEntity);
 
-  Future<void> updateReminder(ReminderEntity reminderEntity);
+  Future<ReminderEntity> updateReminder(ReminderEntity reminderEntity);
 
   Future<ReminderEntity> getReminder(int id);
 
@@ -25,30 +25,34 @@ class MainDaoImpl implements MainDao {
   }
 
   @override
-  Future<void> deleteReminder(ReminderEntity reminderEntity) async {
-    final key = (await _getBox()).keyAt(reminderEntity.index);
-    await (await _getBox()).delete(key);
-  }
+  Future<void> deleteReminder(ReminderEntity reminderEntity) async =>
+      await (await _getBox()).delete(reminderEntity.index);
 
   @override
   Future<List<ReminderEntity>> getAllReminders() async {
     final length = (await _getBox()).length;
+    final keys = (await _getBox()).keys.toList();
     final reminders = (await _getBox()).values.toList();
     return List.generate(
       length,
-      (index) => reminders[index].copyWith(index: index),
+      (index) => reminders[index].copyWith(index: keys[index]),
     );
   }
 
   @override
   Future<ReminderEntity> getReminder(int id) async =>
-      (await _getBox()).getAt(id).copyWith(index: id);
+      (await _getBox()).get(id).copyWith(index: id);
 
   @override
-  Future<void> insertReminder(ReminderEntity reminderEntity) async =>
-      (await _getBox()).add(reminderEntity);
+  Future<ReminderEntity> insertReminder(ReminderEntity reminderEntity) async {
+    final index = await (await _getBox()).add(reminderEntity);
+    final insertedReminder = await getReminder(index);
+    return insertedReminder;
+  }
 
   @override
-  Future<void> updateReminder(ReminderEntity reminderEntity) async =>
-      (await _getBox()).putAt(reminderEntity.index, reminderEntity);
+  Future<ReminderEntity> updateReminder(ReminderEntity reminderEntity) async {
+    (await _getBox()).put(reminderEntity.index, reminderEntity);
+    return getReminder(reminderEntity.index);
+  }
 }

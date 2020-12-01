@@ -4,11 +4,11 @@ import 'package:reminder_flutter_app/model/reminder.dart';
 import 'converters.dart';
 
 abstract class MainRepository {
-  Future<void> insertReminder(Reminder reminder);
+  Future<Reminder> insertReminder(Reminder reminder);
 
   Future<void> deleteReminders(List<Reminder> reminders);
 
-  Future<void> updateReminder(Reminder reminder);
+  Future<Reminder> updateReminder(Reminder reminder);
 
   Future<Reminder> getReminder(int id);
 
@@ -21,16 +21,16 @@ class MainRepositoryImpl implements MainRepository {
   MainRepositoryImpl(this._mainDao);
 
   @override
-  Future<void> insertReminder(Reminder reminder) =>
-      _mainDao.insertReminder(reminder.toReminderEntity());
+  Future<Reminder> insertReminder(Reminder reminder) async =>
+      (await _mainDao.insertReminder(reminder.toReminderEntity())).toReminder();
 
   @override
   Future<Reminder> getReminder(int id) async =>
       (await _mainDao.getReminder(id)).toReminder();
 
   @override
-  Future<void> updateReminder(Reminder reminder) async =>
-      await _mainDao.updateReminder(reminder.toReminderEntity());
+  Future<Reminder> updateReminder(Reminder reminder) async =>
+      (await _mainDao.updateReminder(reminder.toReminderEntity())).toReminder();
 
   @override
   Future<void> deleteReminders(List<Reminder> reminders) async =>
