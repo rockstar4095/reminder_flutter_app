@@ -67,7 +67,8 @@ class _EditReminderDialog extends StatelessWidget {
 
   Widget _titleField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
-        buildWhen: (previous, current) => previous.title != current.title,
+        buildWhen: (previous, current) =>
+            previous.title.isEmpty && previous.title != current.title,
         builder: (context, state) {
           TextEditingController controller = TextEditingController();
           if (state.title.isNotEmpty) {
@@ -89,6 +90,7 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _descriptionField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
+            previous.description.isEmpty &&
             previous.description != current.description,
         builder: (context, state) {
           TextEditingController controller = TextEditingController();
