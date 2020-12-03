@@ -75,12 +75,8 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
       add(ExistingReminderOpened(reminder: await _getReminder(id)));
 
   Future<void> _saveNotification(Reminder reminder) async {
-    final _notificationsPlugin = FlutterLocalNotificationsPlugin();
     await _initTimeZone();
-    await _notificationsPlugin.initialize(InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'),
-    ));
-    await _notificationsPlugin.zonedSchedule(
+    await _mainBloc.notificationsPlugin.zonedSchedule(
       reminder.id ?? 999999,
       reminder.title,
       reminder.description,
