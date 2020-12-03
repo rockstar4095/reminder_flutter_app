@@ -7,6 +7,7 @@ class MainState extends Equatable {
   final String openedTitle;
   final String openedDescription;
   final DateTime openedDateTime;
+  final bool wereTripsLoaded;
 
   MainState({
     @required this.isSelectedModeActive,
@@ -14,6 +15,7 @@ class MainState extends Equatable {
     @required this.openedTitle,
     @required this.openedDescription,
     @required this.openedDateTime,
+    @required this.wereTripsLoaded,
   }) : quantityOfSelectedItems =
             reminders.where((reminder) => reminder.isSelected).length;
 
@@ -23,6 +25,7 @@ class MainState extends Equatable {
     String openedTitle,
     String openedDescription,
     DateTime openedDateTime,
+    bool wereTripsLoaded,
   }) =>
       MainState(
         isSelectedModeActive: isSelectedModeActive ?? this.isSelectedModeActive,
@@ -30,6 +33,7 @@ class MainState extends Equatable {
         openedTitle: openedTitle ?? this.openedTitle,
         openedDescription: openedDescription ?? this.openedDescription,
         openedDateTime: openedDateTime ?? this.openedDateTime,
+        wereTripsLoaded: wereTripsLoaded ?? this.wereTripsLoaded,
       );
 
   factory MainState.initialState() => MainState(
@@ -38,6 +42,7 @@ class MainState extends Equatable {
         openedTitle: '',
         openedDescription: '',
         openedDateTime: DateTime.fromMillisecondsSinceEpoch(0),
+        wereTripsLoaded: false,
       );
 
   @override
@@ -48,5 +53,6 @@ class MainState extends Equatable {
         openedTitle,
         openedDescription,
         openedDateTime,
+        wereTripsLoaded,
       ];
 }

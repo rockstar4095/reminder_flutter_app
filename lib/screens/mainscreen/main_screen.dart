@@ -37,17 +37,18 @@ class MainScreen extends StatelessWidget {
           if (!state.isSelectedModeActive) return SizedBox();
 
           return IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              context.read<MainBloc>().add(DeletePressed());
-            },
-          );
+              icon: Icon(Icons.delete),
+              onPressed: () => context.read<MainBloc>().add(DeletePressed()));
         },
       );
 
   Widget _remindersList(BuildContext context) =>
       BlocBuilder<MainBloc, MainState>(
         builder: (context, state) {
+          if (state.wereTripsLoaded && state.reminders.isEmpty) {
+            return _noRemindersPlaceholder(context);
+          }
+
           return ListView.builder(
             itemCount: state.reminders.length,
             itemBuilder: (context, index) {
@@ -55,5 +56,17 @@ class MainScreen extends StatelessWidget {
             },
           );
         },
+      );
+
+  Widget _noRemindersPlaceholder(BuildContext context) => Container(
+        width: double.infinity,
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 140),
+          child: Text(
+            'Список напоминаний пуст',
+            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 18),
+          ),
+        ),
       );
 }

@@ -17,9 +17,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   void _loadReminders() async {
     final reminders = await _repository.getAllReminders();
     reminders.sort((a, b) => a.dateTime.isAfter(b.dateTime) ? 1 : -1);
-    if (reminders.isNotEmpty) {
-      add(RemindersLoaded(reminders: reminders));
-    }
+    add(RemindersLoaded(reminders: reminders));
   }
 
   @override
@@ -29,7 +27,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is SelectModeDisabled) {
       yield state.copyWith(isSelectedModeActive: false);
     } else if (event is RemindersLoaded) {
-      yield state.copyWith(reminders: event.reminders);
+      yield state.copyWith(
+        reminders: event.reminders,
+        wereTripsLoaded: true,
+      );
     } else if (event is SaveReminderPressed) {
       _loadReminders();
     } else if (event is DeletePressed) {
