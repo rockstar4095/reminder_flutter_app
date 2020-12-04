@@ -17,6 +17,10 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
   final MainRepository _repository;
   final MainBloc _mainBloc;
   final int currentReminderId;
+  String _title = '';
+  String _description = '';
+  String get title => _title;
+  String get description => _description;
 
   EditReminderBloc(
     this._repository,
@@ -37,9 +41,9 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
       await _saveNotification(insertedReminder);
       _mainBloc.add(SaveReminderPressed());
     } else if (event is TitleChanged) {
-      yield state.copyWith(title: event.title);
+      _title = event.title;
     } else if (event is DescriptionChanged) {
-      yield state.copyWith(description: event.description);
+      _description = event.description;
     } else if (event is DateChanged) {
       yield state.copyWith(date: event.date);
     } else if (event is TimeChanged) {

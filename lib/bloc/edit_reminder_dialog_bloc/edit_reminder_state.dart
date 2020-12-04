@@ -1,14 +1,14 @@
 part of 'edit_reminder_bloc.dart';
 
 class EditReminderState extends Equatable {
-  final String title;
-  final String description;
+  final String editedTitle;
+  final String editedDescription;
   final DateTime date;
   final TimeOfDay time;
 
   factory EditReminderState.initialState() => EditReminderState(
-        title: '',
-        description: '',
+        editedTitle: '',
+        editedDescription: '',
         date: DateTime(
           DateTime.now().year,
           DateTime.now().month,
@@ -18,8 +18,8 @@ class EditReminderState extends Equatable {
       );
 
   EditReminderState({
-    @required this.title,
-    @required this.description,
+    @required this.editedTitle,
+    @required this.editedDescription,
     @required this.date,
     @required this.time,
   });
@@ -31,16 +31,16 @@ class EditReminderState extends Equatable {
     TimeOfDay time,
   }) =>
       EditReminderState(
-        title: title ?? this.title,
-        description: description ?? this.description,
+        editedTitle: title ?? this.editedTitle,
+        editedDescription: description ?? this.editedDescription,
         date: date ?? this.date,
         time: time ?? this.time,
       );
 
   @override
   List<Object> get props => [
-        title,
-        description,
+        editedTitle,
+        editedDescription,
         date,
         time,
       ];

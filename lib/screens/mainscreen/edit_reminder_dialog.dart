@@ -68,17 +68,13 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _titleField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
-            previous.title.isEmpty && previous.title != current.title,
+            previous.editedTitle.isEmpty && current.editedTitle.isNotEmpty,
         builder: (context, state) {
-          TextEditingController controller = TextEditingController();
-          if (state.title.isNotEmpty) {
-            controller.text = state.title;
-            controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length),
-            );
-          }
-          return TextField(
-            controller: controller,
+
+          // key is used to paste initial value from changing state.
+          return TextFormField(
+            key: Key(state.editedTitle),
+            initialValue: state.editedTitle,
             decoration: InputDecoration(hintText: 'Название'),
             onChanged: (input) => context.read<EditReminderBloc>().add(
                   TitleChanged(title: input),
@@ -90,20 +86,16 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _descriptionField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
-            previous.description.isEmpty &&
-            previous.description != current.description,
+            previous.editedDescription.isEmpty &&
+            current.editedDescription.isNotEmpty,
         builder: (context, state) {
-          TextEditingController controller = TextEditingController();
-          if (state.description.isNotEmpty) {
-            controller.text = state.description;
-            controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length),
-            );
-          }
-          return TextField(
-            controller: controller,
-            maxLines: 5,
+
+          // key is used to paste initial value from changing state.
+          return TextFormField(
+            key: Key(state.editedDescription),
+            initialValue: state.editedDescription,
             decoration: InputDecoration(hintText: 'Описание'),
+            maxLines: 5,
             onChanged: (input) => context.read<EditReminderBloc>().add(
                   DescriptionChanged(description: input),
                 ),
@@ -165,7 +157,7 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _save(BuildContext context) => RaisedButton(
         child: Text('Сохранить'),
         onPressed: () {
-          final title = context.read<EditReminderBloc>().state.title;
+          final title = context.read<EditReminderBloc>().title;
           if (title.isEmpty) {
             _showEmptyTitleSnack(context);
             return;
@@ -186,8 +178,8 @@ class _EditReminderDialog extends StatelessWidget {
 
   Reminder _formReminder(BuildContext context) => Reminder(
         id: context.read<EditReminderBloc>().currentReminderId,
-        title: context.read<EditReminderBloc>().state.title,
-        description: context.read<EditReminderBloc>().state.description,
+        title: context.read<EditReminderBloc>().title,
+        description: context.read<EditReminderBloc>().description,
         dateTime: _getDateTime(context),
       );
 
