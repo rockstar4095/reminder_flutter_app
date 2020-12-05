@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/view_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';

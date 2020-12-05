@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:timezone/data/latest_all.dart' as timeZone;
@@ -50,6 +50,10 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
       yield state.copyWith(time: event.time);
     } else if (event is ExistingReminderOpened) {
       final reminder = event.reminder;
+
+      _title = reminder.title;
+      _description = reminder.description;
+
       yield state.copyWith(
         title: reminder.title,
         description: reminder.description,
