@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_event.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
@@ -70,7 +71,7 @@ class _ViewReminderDialog extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 24),
               child: Text(
-                '$date в $time',
+                S.of(context).onDateInTime(date, time),
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
@@ -107,7 +108,7 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _editButton(BuildContext context) => SizedBox(
         width: double.infinity,
         child: PrimaryButton(
-          child: Text('Edit'),
+          child: Text(S.of(context).editButton),
           onPressed: () {
             Navigator.of(context).pop();
             EditReminderDialog.open(context, reminderId: reminderId);

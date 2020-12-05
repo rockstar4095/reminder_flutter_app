@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/editreminder/edit_reminder_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
@@ -85,7 +86,7 @@ class _EditReminderDialog extends StatelessWidget {
             child: TextFormField(
               key: Key(state.editedTitle),
               initialValue: state.editedTitle,
-              decoration: InputDecoration(hintText: 'Название'),
+              decoration: InputDecoration(hintText: S.of(context).titleHint),
               onChanged: (input) => context.read<EditReminderBloc>().add(
                     TitleChanged(title: input),
                   ),
@@ -106,7 +107,8 @@ class _EditReminderDialog extends StatelessWidget {
             child: TextFormField(
               key: Key(state.editedDescription),
               initialValue: state.editedDescription,
-              decoration: InputDecoration(hintText: 'Описание'),
+              decoration:
+                  InputDecoration(hintText: S.of(context).descriptionHint),
               maxLines: 3,
               onChanged: (input) => context.read<EditReminderBloc>().add(
                     DescriptionChanged(description: input),
@@ -180,7 +182,7 @@ class _EditReminderDialog extends StatelessWidget {
   }
 
   Widget _save(BuildContext context) => PrimaryButton(
-        child: Text('СОХРАНИТЬ'),
+        child: Text(S.of(context).saveButton),
         onPressed: () {
           final title = context.read<EditReminderBloc>().title;
           if (title.isEmpty) {
@@ -196,7 +198,7 @@ class _EditReminderDialog extends StatelessWidget {
 
   Widget _cancel(BuildContext context) => AppTextButton(
         child: Text(
-          'ОТМЕНА',
+          S.of(context).cancelButton,
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         onPressed: () => Navigator.of(context).pop(),
@@ -205,7 +207,7 @@ class _EditReminderDialog extends StatelessWidget {
   void _showEmptyTitleSnack(BuildContext context) =>
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('Укажите название'),
+          content: Text(S.of(context).specifyTitle),
         ),
       );
 

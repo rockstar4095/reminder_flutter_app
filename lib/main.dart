@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_flutter_app/app_theme.dart';
 import 'package:reminder_flutter_app/bloc_builder.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/repository_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
 
@@ -30,7 +31,7 @@ class App extends StatelessWidget {
         title: 'Flutter Demo',
         theme: lightTheme,
         localizationsDelegates: _localizationDelegates,
-        supportedLocales: _supportedLocales,
+        supportedLocales: S.delegate.supportedLocales,
         home: MainScreen(),
       ),
     );
@@ -62,9 +63,5 @@ final List<LocalizationsDelegate<dynamic>> _localizationDelegates = [
   GlobalMaterialLocalizations.delegate,
   GlobalWidgetsLocalizations.delegate,
   GlobalCupertinoLocalizations.delegate,
-];
-
-final List<Locale> _supportedLocales = [
-  const Locale('en', ''),
-  const Locale('ru', ''),
+  S.delegate,
 ];
