@@ -1,11 +1,11 @@
 {
-  "reminders": "Напоминания",
-  "onDateInTime": "{date} в {time}",
-  "editButton": "ИЗМЕНИТЬ",
-  "titleHint": "Название",
-  "descriptionHint": "Описание",
-  "saveButton": "СОХРАНИТЬ",
-  "cancelButton": "ОТМЕНА",
-  "specifyTitle": "Укажите название",
-  "noRemindersHint": "Список напоминаний пуст"
+  "reminders": "Reminders",
+  "onDateInTime": "{date} in {time}",
+  "editButton": "EDIT",
+  "titleHint": "Title",
+  "descriptionHint": "Description",
+  "saveButton": "SAVE",
+  "cancelButton": "CANCEL",
+  "specifyTitle": "Specify title",
+  "noRemindersHint": "Reminders list is empty"
 }

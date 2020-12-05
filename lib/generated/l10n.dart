@@ -36,90 +36,90 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Напоминания`
+  /// `Reminders`
   String get reminders {
     return Intl.message(
-      'Напоминания',
+      'Reminders',
       name: 'reminders',
       desc: '',
       args: [],
     );
   }
 
-  /// `{date} в {time}`
+  /// `{date} in {time}`
   String onDateInTime(Object date, Object time) {
     return Intl.message(
-      '$date в $time',
+      '$date in $time',
       name: 'onDateInTime',
       desc: '',
       args: [date, time],
     );
   }
 
-  /// `ИЗМЕНИТЬ`
+  /// `EDIT`
   String get editButton {
     return Intl.message(
-      'ИЗМЕНИТЬ',
+      'EDIT',
       name: 'editButton',
       desc: '',
       args: [],
     );
   }
 
-  /// `Название`
+  /// `Title`
   String get titleHint {
     return Intl.message(
-      'Название',
+      'Title',
       name: 'titleHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Описание`
+  /// `Description`
   String get descriptionHint {
     return Intl.message(
-      'Описание',
+      'Description',
       name: 'descriptionHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `СОХРАНИТЬ`
+  /// `SAVE`
   String get saveButton {
     return Intl.message(
-      'СОХРАНИТЬ',
+      'SAVE',
       name: 'saveButton',
       desc: '',
       args: [],
     );
   }
 
-  /// `ОТМЕНА`
+  /// `CANCEL`
   String get cancelButton {
     return Intl.message(
-      'ОТМЕНА',
+      'CANCEL',
       name: 'cancelButton',
       desc: '',
       args: [],
     );
   }
 
-  /// `Укажите название`
+  /// `Specify title`
   String get specifyTitle {
     return Intl.message(
-      'Укажите название',
+      'Specify title',
       name: 'specifyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Список напоминаний пуст`
+  /// `Reminders list is empty`
   String get noRemindersHint {
     return Intl.message(
-      'Список напоминаний пуст',
+      'Reminders list is empty',
       name: 'noRemindersHint',
       desc: '',
       args: [],
@@ -133,6 +133,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ru'),
     ];
   }
 
