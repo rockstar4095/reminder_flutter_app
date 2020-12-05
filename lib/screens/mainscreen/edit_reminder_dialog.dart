@@ -180,7 +180,7 @@ class _EditReminderDialog extends StatelessWidget {
   }
 
   Widget _save(BuildContext context) => PrimaryButton(
-        child: Text('Сохранить'),
+        child: Text('СОХРАНИТЬ'),
         onPressed: () {
           final title = context.read<EditReminderBloc>().title;
           if (title.isEmpty) {
@@ -196,7 +196,7 @@ class _EditReminderDialog extends StatelessWidget {
 
   Widget _cancel(BuildContext context) => AppTextButton(
         child: Text(
-          'Отмена',
+          'ОТМЕНА',
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         onPressed: () => Navigator.of(context).pop(),

@@ -47,7 +47,14 @@ final _lightColorScheme = ColorScheme.light().copyWith(
 );
 
 final _lightAppBarTheme = ThemeData.light().appBarTheme.copyWith(
-      textTheme: _lightTextTheme,
+      textTheme: _lightTextTheme.copyWith(
+        headline6: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 19,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.15,
+        ),
+      ),
     );
 
 final _lightTextTheme = ThemeData.light().textTheme.copyWith(
@@ -67,8 +74,8 @@ final _lightTextTheme = ThemeData.light().textTheme.copyWith(
         fontWeight: FontWeight.w700,
       ),
       headline6: GoogleFonts.inter(
-        color: Colors.white,
-        fontSize: 19,
+        color: _textColor,
+        fontSize: 18,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.15,
       ),

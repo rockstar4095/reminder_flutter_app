@@ -39,11 +39,12 @@ class _ViewReminderDialog extends StatelessWidget {
                 _closeDialogButton(context),
               ],
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 24),
             _title(context),
             SizedBox(height: 16),
             _description(context),
             _editButton(context),
+            SizedBox(height: 16),
           ],
         ),
       );
@@ -77,8 +78,7 @@ class _ViewReminderDialog extends StatelessWidget {
         },
       );
 
-  Widget _title(BuildContext context) =>
-      BlocBuilder<MainBloc, MainState>(
+  Widget _title(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
             previous.openedTitle != current.openedTitle,
         builder: (context, state) => Text(
@@ -87,8 +87,7 @@ class _ViewReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _description(BuildContext context) =>
-      BlocBuilder<MainBloc, MainState>(
+  Widget _description(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
             previous.openedDescription != current.openedDescription,
         builder: (context, state) {
