@@ -20,6 +20,8 @@ dependencies:
   flutter_local_notifications: ^3.0.1+6
   timezone: ^0.5.9
   google_fonts: ^1.1.1
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_flutter_app/app_theme.dart';
@@ -28,6 +29,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: lightTheme,
+        localizationsDelegates: _localizationDelegates,
+        supportedLocales: _supportedLocales,
         home: MainScreen(),
       ),
     );
@@ -54,3 +57,14 @@ class AppBlocProvider extends StatelessWidget {
     return provider;
   }
 }
+
+final List<LocalizationsDelegate<dynamic>> _localizationDelegates = [
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
+
+final List<Locale> _supportedLocales = [
+  const Locale('en', ''),
+  const Locale('ru', ''),
+];
