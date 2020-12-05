@@ -5,6 +5,7 @@ import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
+import 'package:reminder_flutter_app/widget/buttons.dart';
 
 class ViewReminderDialog {
   static void open(BuildContext context, int reminderId) {
@@ -106,7 +107,7 @@ class _ViewReminderDialog extends StatelessWidget {
 
   Widget _editButton(BuildContext context) => SizedBox(
         width: double.infinity,
-        child: RaisedButton(
+        child: PrimaryButton(
           child: Text('Edit'),
           onPressed: () {
             Navigator.of(context).pop();
