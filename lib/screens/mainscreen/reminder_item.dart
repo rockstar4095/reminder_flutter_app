@@ -23,11 +23,17 @@ class ReminderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (_isFirstItem()) SizedBox(height: 16),
         if (isDateDividerNeeded()) _dateDivider(context),
         _item(context),
+        if (_isLastItem()) SizedBox(height: 80),
       ],
     );
   }
+
+  bool _isFirstItem() => index == 0;
+
+  bool _isLastItem() => index == reminders.length - 1;
 
   bool isDateDividerNeeded() =>
       index == 0 || _previous.dateTime.isNotSameDate(_current.dateTime);
@@ -39,6 +45,8 @@ class ReminderItem extends StatelessWidget {
             previous.isSelectedModeActive != current.isSelectedModeActive,
         builder: (context, state) {
           return InkWell(
+            splashColor: Theme.of(context).primaryColor,
+            highlightColor: Theme.of(context).primaryColorLight,
             onTap: () {
               if (state.isSelectedModeActive) {
                 context.read<MainBloc>().onItemSelect(reminderId);
@@ -54,7 +62,9 @@ class ReminderItem extends StatelessWidget {
       );
 
   Widget _itemContent(BuildContext context) => Container(
-        color: _current.isSelected ? Colors.grey : Colors.transparent,
+        color: _current.isSelected
+            ? Theme.of(context).primaryColorLight
+            : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(
@@ -79,7 +89,7 @@ class ReminderItem extends StatelessWidget {
 
   Widget _dateDivider(BuildContext context) => Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.only(top: 16, bottom: 4),
         child: Text(
           _current.dateTime.ddMMyy(),
           style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),

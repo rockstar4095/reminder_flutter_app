@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final _primary = Color(0xff7e57c2);
+final _primaryLight = Color(0xffd1c4e9);
 final _secondary = _primary;
 final _hint = Color(0xff9575cd);
 final _disabled = Color(0xffeeeeee);
@@ -11,6 +12,8 @@ final _textColor = Color(0xff3c4444);
 final lightTheme = ThemeData.light().copyWith(
   colorScheme: _lightColorScheme,
   primaryColor: _primary,
+  primaryColorLight: _primaryLight,
+  shadowColor: _primaryLight,
   primaryColorBrightness: Brightness.dark,
   accentColor: _secondary,
   buttonColor: _secondary,
