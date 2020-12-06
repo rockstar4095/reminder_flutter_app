@@ -12,7 +12,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepository _repository;
   final notificationsPlugin = FlutterLocalNotificationsPlugin()
     ..initialize(InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'),
+      android: AndroidInitializationSettings('ic_notification'),
     ));
 
   MainBloc(this._repository) : super(MainState.initialState()) {
