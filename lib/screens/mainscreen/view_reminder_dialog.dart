@@ -33,6 +33,7 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _body(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
@@ -82,9 +83,11 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _title(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
             previous.openedTitle != current.openedTitle,
-        builder: (context, state) => Text(
-          state.openedTitle,
-          style: Theme.of(context).textTheme.headline6,
+        builder: (context, state) => Align(
+          child: Text(
+            state.openedTitle,
+            style: Theme.of(context).textTheme.headline6,
+          ),
         ),
       );
 
@@ -108,7 +111,7 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _editButton(BuildContext context) => SizedBox(
         width: double.infinity,
         child: PrimaryButton(
-          child: Text(S.of(context).editButton),
+          text: S.of(context).editButton,
           onPressed: () {
             Navigator.of(context).pop();
             EditReminderDialog.open(context, reminderId: reminderId);

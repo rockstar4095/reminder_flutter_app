@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
+  final String text;
   final Widget child;
   final VoidCallback onPressed;
   final EdgeInsetsGeometry padding;
@@ -11,20 +12,29 @@ class PrimaryButton extends StatelessWidget {
     @required this.onPressed,
     this.padding,
     this.margin,
+    this.text,
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
-        child: RaisedButton(
-          padding: padding ?? const EdgeInsets.all(16),
-          child: child,
-          onPressed: onPressed,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
+  Widget build(BuildContext context) {
+    Widget _child = text != null
+        ? Text(
+            text,
+            style: TextStyle(color: Colors.white),
+          )
+        : child;
+
+    return Container(
+      width: double.infinity,
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
+      child: RaisedButton(
+        padding: padding ?? const EdgeInsets.all(16),
+        child: _child,
+        onPressed: onPressed,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
 }
 
 class AppTextButton extends StatelessWidget {
@@ -54,6 +64,8 @@ class AppTextButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             side: borderSide ?? BorderSide.none,
           ),
+          splashColor: Theme.of(context).hintColor,
+          highlightColor: Theme.of(context).primaryColorLight,
         ),
       );
 }

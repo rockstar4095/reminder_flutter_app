@@ -182,7 +182,7 @@ class _EditReminderDialog extends StatelessWidget {
   }
 
   Widget _save(BuildContext context) => PrimaryButton(
-        child: Text(S.of(context).saveButton),
+        text: S.of(context).saveButton,
         onPressed: () {
           final title = context.read<EditReminderBloc>().title;
           if (title.isEmpty) {

@@ -101,7 +101,7 @@ class ReminderItem extends StatelessWidget {
         child: RichText(
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
-            text: _current.description,
+            text: _current.description.replaceAll('\n', ' '),
             style: Theme.of(context).textTheme.caption,
           ),
         ),

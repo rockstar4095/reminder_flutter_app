@@ -25,6 +25,8 @@ final lightTheme = ThemeData.light().copyWith(
   textTheme: _lightTextTheme,
   appBarTheme: _lightAppBarTheme,
   snackBarTheme: _lightSnackBarTheme,
+  textSelectionTheme: _lightTextSelectionTheme,
+  useTextSelectionTheme: true,
 );
 
 final _lightFabTheme = ThemeData.light().floatingActionButtonTheme.copyWith(
@@ -33,7 +35,6 @@ final _lightFabTheme = ThemeData.light().floatingActionButtonTheme.copyWith(
 
 final _lightButtonTheme = ThemeData.light().buttonTheme.copyWith(
       buttonColor: _secondary,
-      textTheme: ButtonTextTheme.primary,
     );
 
 final _lightColorScheme = ColorScheme.light().copyWith(
@@ -62,6 +63,10 @@ final _lightSnackBarTheme = ThemeData.light().snackBarTheme.copyWith(
       backgroundColor: _textColor,
       actionTextColor: Colors.white,
     );
+
+final _lightTextSelectionTheme = ThemeData.light().textSelectionTheme.copyWith(
+  selectionColor: _primaryLight,
+);
 
 final _lightTextTheme = ThemeData.light().textTheme.copyWith(
       headline3: GoogleFonts.inter(
