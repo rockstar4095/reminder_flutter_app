@@ -109,7 +109,7 @@ class _EditReminderDialog extends StatelessWidget {
               initialValue: state.editedDescription,
               decoration:
                   InputDecoration(hintText: S.of(context).descriptionHint),
-              maxLines: 3,
+              maxLines: state.editedDescription.isEmpty ? 3 : null,
               onChanged: (input) => context.read<EditReminderBloc>().add(
                     DescriptionChanged(description: input),
                   ),
