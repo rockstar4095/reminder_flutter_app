@@ -1,0 +1,11 @@
+{
+  "reminders": "Reminders",
+  "onDateInTime": "{date} in {time}",
+  "editButton": "EDIT",
+  "titleHint": "Title",
+  "descriptionHint": "Description",
+  "saveButton": "SAVE",
+  "cancelButton": "CANCEL",
+  "specifyTitle": "Specify title",
+  "noRemindersHint": "Reminders list is empty"
+}

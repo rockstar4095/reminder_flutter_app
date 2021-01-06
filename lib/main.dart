@@ -1,66 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:reminder_flutter_app/app_theme.dart';
+import 'package:reminder_flutter_app/bloc_builder.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
+import 'package:reminder_flutter_app/repository_builder.dart';
+import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
 
-void main() {
-  runApp(MyApp());
+import 'entity/reminder_entity.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initHive();
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+Future<void> initHive() async {
+  final appDocumentDirectory = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
+  Hive.registerAdapter(ReminderEntityAdapter());
+}
+
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return AppBlocProvider(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: lightTheme,
+        localizationsDelegates: _localizationDelegates,
+        supportedLocales: S.delegate.supportedLocales,
+        home: MainScreen(),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class AppBlocProvider extends StatelessWidget {
+  final Widget child;
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  AppBlocProvider({this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+    Widget provider = BlocProvider(
+      create: (context) => Blocs.mainBloc(context),
+      child: child,
     );
+
+    provider = RepositoryProvider(
+      create: (context) => Repositories.mainRepository(),
+      child: provider,
+    );
+
+    return provider;
   }
 }
+
+final List<LocalizationsDelegate<dynamic>> _localizationDelegates = [
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+  S.delegate,
+];
