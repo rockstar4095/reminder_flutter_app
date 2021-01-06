@@ -36,7 +36,95 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Reminders`
+  String get reminders {
+    return Intl.message(
+      'Reminders',
+      name: 'reminders',
+      desc: '',
+      args: [],
+    );
+  }
 
+  /// `{date} in {time}`
+  String onDateInTime(Object date, Object time) {
+    return Intl.message(
+      '$date in $time',
+      name: 'onDateInTime',
+      desc: '',
+      args: [date, time],
+    );
+  }
+
+  /// `EDIT`
+  String get editButton {
+    return Intl.message(
+      'EDIT',
+      name: 'editButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get titleHint {
+    return Intl.message(
+      'Title',
+      name: 'titleHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get descriptionHint {
+    return Intl.message(
+      'Description',
+      name: 'descriptionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SAVE`
+  String get saveButton {
+    return Intl.message(
+      'SAVE',
+      name: 'saveButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CANCEL`
+  String get cancelButton {
+    return Intl.message(
+      'CANCEL',
+      name: 'cancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Specify title`
+  String get specifyTitle {
+    return Intl.message(
+      'Specify title',
+      name: 'specifyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminders list is empty`
+  String get noRemindersHint {
+    return Intl.message(
+      'Reminders list is empty',
+      name: 'noRemindersHint',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -45,6 +133,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ru'),
     ];
   }
 

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc/main/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 
@@ -12,7 +12,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepository _repository;
   final notificationsPlugin = FlutterLocalNotificationsPlugin()
     ..initialize(InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'),
+      android: AndroidInitializationSettings('ic_notification'),
     ));
 
   MainBloc(this._repository) : super(MainState.initialState()) {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main/main_event.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
+import 'package:reminder_flutter_app/widget/buttons.dart';
 
 class ViewReminderDialog {
   static void open(BuildContext context, int reminderId) {
@@ -31,6 +33,7 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _body(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
@@ -38,11 +41,12 @@ class _ViewReminderDialog extends StatelessWidget {
                 _closeDialogButton(context),
               ],
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 24),
             _title(context),
             SizedBox(height: 16),
             _description(context),
             _editButton(context),
+            SizedBox(height: 16),
           ],
         ),
       );
@@ -68,7 +72,7 @@ class _ViewReminderDialog extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 24),
               child: Text(
-                '$date в $time',
+                S.of(context).onDateInTime(date, time),
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
@@ -76,18 +80,18 @@ class _ViewReminderDialog extends StatelessWidget {
         },
       );
 
-  Widget _title(BuildContext context) =>
-      BlocBuilder<MainBloc, MainState>(
+  Widget _title(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
             previous.openedTitle != current.openedTitle,
-        builder: (context, state) => Text(
-          state.openedTitle,
-          style: Theme.of(context).textTheme.headline6,
+        builder: (context, state) => Align(
+          child: Text(
+            state.openedTitle,
+            style: Theme.of(context).textTheme.headline6,
+          ),
         ),
       );
 
-  Widget _description(BuildContext context) =>
-      BlocBuilder<MainBloc, MainState>(
+  Widget _description(BuildContext context) => BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) =>
             previous.openedDescription != current.openedDescription,
         builder: (context, state) {
@@ -106,8 +110,8 @@ class _ViewReminderDialog extends StatelessWidget {
 
   Widget _editButton(BuildContext context) => SizedBox(
         width: double.infinity,
-        child: RaisedButton(
-          child: Text('Edit'),
+        child: PrimaryButton(
+          text: S.of(context).editButton,
           onPressed: () {
             Navigator.of(context).pop();
             EditReminderDialog.open(context, reminderId: reminderId);

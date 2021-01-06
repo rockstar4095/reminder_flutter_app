@@ -19,6 +19,10 @@ dependencies:
   path_provider: ^1.6.24
   flutter_local_notifications: ^3.0.1+6
   timezone: ^0.5.9
+  google_fonts: ^1.1.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_launcher_icons: ^0.8.1
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +32,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_intl:
+  enabled: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
