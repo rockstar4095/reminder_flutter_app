@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/edit_reminder_dialog_bloc/edit_reminder_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/editreminder/edit_reminder_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
+import 'package:reminder_flutter_app/widget/buttons.dart';
 
 class EditReminderDialog {
   static void open(BuildContext context, {int reminderId}) =>
@@ -43,23 +45,31 @@ class _EditReminderDialog extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            SizedBox(height: 4),
             _titleField(context),
+            SizedBox(height: 8),
             _descriptionField(context),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _dateField(context),
-                _timeField(context),
+                SizedBox(width: 16),
+                Expanded(child: _dateField(context)),
+                SizedBox(width: 16),
+                Expanded(child: _timeField(context)),
+                SizedBox(width: 16),
               ],
             ),
             SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _save(context),
-                _cancel(context),
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  _save(context),
+                  SizedBox(height: 8),
+                  _cancel(context),
+                ],
+              ),
             ),
           ],
         ),
@@ -67,21 +77,20 @@ class _EditReminderDialog extends StatelessWidget {
 
   Widget _titleField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
-        buildWhen: (previous, current) => previous.title != current.title,
+        buildWhen: (previous, current) =>
+            previous.editedTitle.isEmpty && current.editedTitle.isNotEmpty,
         builder: (context, state) {
-          TextEditingController controller = TextEditingController();
-          if (state.title.isNotEmpty) {
-            controller.text = state.title;
-            controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length),
-            );
-          }
-          return TextField(
-            controller: controller,
-            decoration: InputDecoration(hintText: 'Название'),
-            onChanged: (input) => context.read<EditReminderBloc>().add(
-                  TitleChanged(title: input),
-                ),
+          // key is used to paste initial value from changing state.
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextFormField(
+              key: Key(state.editedTitle),
+              initialValue: state.editedTitle,
+              decoration: InputDecoration(hintText: S.of(context).titleHint),
+              onChanged: (input) => context.read<EditReminderBloc>().add(
+                    TitleChanged(title: input),
+                  ),
+            ),
           );
         },
       );
@@ -89,22 +98,22 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _descriptionField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
-            previous.description != current.description,
+            previous.editedDescription.isEmpty &&
+            current.editedDescription.isNotEmpty,
         builder: (context, state) {
-          TextEditingController controller = TextEditingController();
-          if (state.description.isNotEmpty) {
-            controller.text = state.description;
-            controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length),
-            );
-          }
-          return TextField(
-            controller: controller,
-            maxLines: 5,
-            decoration: InputDecoration(hintText: 'Описание'),
-            onChanged: (input) => context.read<EditReminderBloc>().add(
-                  DescriptionChanged(description: input),
-                ),
+          // key is used to paste initial value from changing state.
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextFormField(
+              key: Key(state.editedDescription),
+              initialValue: state.editedDescription,
+              decoration:
+                  InputDecoration(hintText: S.of(context).descriptionHint),
+              maxLines: state.editedDescription.isEmpty ? 3 : null,
+              onChanged: (input) => context.read<EditReminderBloc>().add(
+                    DescriptionChanged(description: input),
+                  ),
+            ),
           );
         },
       );
@@ -112,8 +121,14 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _dateField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) => previous.date != current.date,
-        builder: (context, state) => FlatButton(
-          child: Text(state.date.ddMMyy()),
+        builder: (context, state) => AppTextButton(
+          margin: const EdgeInsets.all(0),
+          child: Text(
+            state.date.ddMMyy(),
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
+          ),
           onPressed: () {
             _unFocus(context);
             _showDatePicker(context);
@@ -135,8 +150,14 @@ class _EditReminderDialog extends StatelessWidget {
   Widget _timeField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) => previous.time != current.time,
-        builder: (context, state) => FlatButton(
-          child: Text(state.time.format(context)),
+        builder: (context, state) => AppTextButton(
+          margin: const EdgeInsets.all(0),
+          child: Text(
+            state.time.format(context),
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
+          ),
           onPressed: () {
             _unFocus(context);
             _showTimePicker(context);
@@ -160,10 +181,10 @@ class _EditReminderDialog extends StatelessWidget {
     }
   }
 
-  Widget _save(BuildContext context) => RaisedButton(
-        child: Text('Сохранить'),
+  Widget _save(BuildContext context) => PrimaryButton(
+        text: S.of(context).saveButton,
         onPressed: () {
-          final title = context.read<EditReminderBloc>().state.title;
+          final title = context.read<EditReminderBloc>().title;
           if (title.isEmpty) {
             _showEmptyTitleSnack(context);
             return;
@@ -175,17 +196,25 @@ class _EditReminderDialog extends StatelessWidget {
         },
       );
 
+  Widget _cancel(BuildContext context) => AppTextButton(
+        child: Text(
+          S.of(context).cancelButton,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      );
+
   void _showEmptyTitleSnack(BuildContext context) =>
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('Укажите название'),
+          content: Text(S.of(context).specifyTitle),
         ),
       );
 
   Reminder _formReminder(BuildContext context) => Reminder(
         id: context.read<EditReminderBloc>().currentReminderId,
-        title: context.read<EditReminderBloc>().state.title,
-        description: context.read<EditReminderBloc>().state.description,
+        title: context.read<EditReminderBloc>().title,
+        description: context.read<EditReminderBloc>().description,
         dateTime: _getDateTime(context),
       );
 
@@ -195,12 +224,5 @@ class _EditReminderDialog extends StatelessWidget {
         context.read<EditReminderBloc>().state.date.day,
         context.read<EditReminderBloc>().state.time.hour,
         context.read<EditReminderBloc>().state.time.minute,
-      );
-
-  Widget _cancel(BuildContext context) => RaisedButton(
-        child: Text('Отменить'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
       );
 }

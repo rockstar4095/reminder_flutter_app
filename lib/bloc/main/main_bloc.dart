@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:reminder_flutter_app/bloc/main/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 
@@ -9,6 +10,10 @@ part 'main_state.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepository _repository;
+  final notificationsPlugin = FlutterLocalNotificationsPlugin()
+    ..initialize(InitializationSettings(
+      android: AndroidInitializationSettings('ic_notification'),
+    ));
 
   MainBloc(this._repository) : super(MainState.initialState()) {
     _loadReminders();
@@ -17,9 +22,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   void _loadReminders() async {
     final reminders = await _repository.getAllReminders();
     reminders.sort((a, b) => a.dateTime.isAfter(b.dateTime) ? 1 : -1);
-    if (reminders.isNotEmpty) {
-      add(RemindersLoaded(reminders: reminders));
-    }
+    add(RemindersLoaded(reminders: reminders));
   }
 
   @override
@@ -29,7 +32,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is SelectModeDisabled) {
       yield state.copyWith(isSelectedModeActive: false);
     } else if (event is RemindersLoaded) {
-      yield state.copyWith(reminders: event.reminders);
+      yield state.copyWith(
+        reminders: event.reminders,
+        wereTripsLoaded: true,
+      );
     } else if (event is SaveReminderPressed) {
       _loadReminders();
     } else if (event is DeletePressed) {
@@ -74,9 +80,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  Future<void> _deleteReminders() async => _repository.deleteReminders(
-        state.reminders.where((reminder) => reminder.isSelected).toList(),
-      );
+  Future<void> _deleteReminders() async {
+    final reminders = state.reminders.where((it) => it.isSelected).toList();
+    _repository.deleteReminders(reminders);
+    reminders.forEach((it) => notificationsPlugin.cancel(it.id));
+  }
 
   Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
 }

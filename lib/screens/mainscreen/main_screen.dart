@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main_bloc/main_event.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/main/main_event.dart';
+import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/reminder_item.dart';
 
@@ -10,7 +11,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = Scaffold(
       appBar: AppBar(
-        title: Text('Напоминания'),
+        title: Text(S.of(context).reminders),
         actions: [
           _deleteIcon(context),
         ],
@@ -37,17 +38,18 @@ class MainScreen extends StatelessWidget {
           if (!state.isSelectedModeActive) return SizedBox();
 
           return IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              context.read<MainBloc>().add(DeletePressed());
-            },
-          );
+              icon: Icon(Icons.delete),
+              onPressed: () => context.read<MainBloc>().add(DeletePressed()));
         },
       );
 
   Widget _remindersList(BuildContext context) =>
       BlocBuilder<MainBloc, MainState>(
         builder: (context, state) {
+          if (state.wereTripsLoaded && state.reminders.isEmpty) {
+            return _noRemindersPlaceholder(context);
+          }
+
           return ListView.builder(
             itemCount: state.reminders.length,
             itemBuilder: (context, index) {
@@ -55,5 +57,17 @@ class MainScreen extends StatelessWidget {
             },
           );
         },
+      );
+
+  Widget _noRemindersPlaceholder(BuildContext context) => Container(
+        width: double.infinity,
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 140),
+          child: Text(
+            S.of(context).noRemindersHint,
+            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 18),
+          ),
+        ),
       );
 }
