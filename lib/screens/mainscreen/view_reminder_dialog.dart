@@ -98,7 +98,7 @@ class _ViewReminderDialog extends StatelessWidget {
           if (state.openedDescription.isEmpty) return SizedBox();
           return Padding(
             padding:
-                const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 24),
+                const EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 24),
             child: Text(
               state.openedDescription,
               style:
