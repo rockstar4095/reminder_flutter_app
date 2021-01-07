@@ -50,7 +50,21 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         openedDescription: event.openedDescription,
         openedDateTime: event.openedDateTime,
       );
+    } else if (event is EditReminderDialogOpened) {
+      yield* _disabledSelectMode();
     }
+  }
+
+  Stream<MainState> _disabledSelectMode() async* {
+    final unselectedReminders = <Reminder>[];
+    for (final reminder in state.reminders) {
+      final unselectedReminder =
+          reminder.isSelected ? reminder.copyWith(isSelected: false) : reminder;
+
+      unselectedReminders.add(unselectedReminder);
+    }
+    yield state.copyWith(reminders: unselectedReminders);
+    add(SelectModeDisabled());
   }
 
   Future<void> _loadReminder(int id) async {

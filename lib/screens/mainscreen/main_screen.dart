@@ -19,6 +19,7 @@ class MainScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           EditReminderDialog.open(context);
+          context.read<MainBloc>().add(EditReminderDialogOpened());
         },
         child: Icon(Icons.add),
       ),

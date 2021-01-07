@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
@@ -70,21 +71,24 @@ class ReminderItem extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(child: _reminderContent(context)),
                   Text(_current.dateTime.hhmm()),
                 ],
               ),
-              if (_current.description.isNotEmpty)
-                _reminderDescription(context),
+              _reminderDescription(context),
             ],
           ),
         ),
       );
 
-  Widget _reminderContent(BuildContext context) => Text(
-        _current.title,
-        style: Theme.of(context).textTheme.bodyText1,
+  Widget _reminderContent(BuildContext context) => RichText(
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          text: _current.title.replaceAll('\n', ' '),
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
       );
 
   Widget _dateDivider(BuildContext context) => Container(
@@ -101,7 +105,7 @@ class ReminderItem extends StatelessWidget {
         child: RichText(
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
-            text: _current.description.replaceAll('\n', ' '),
+            text: _current.description.replaceAll('\n', ' ') ?? '',
             style: Theme.of(context).textTheme.caption,
           ),
         ),
