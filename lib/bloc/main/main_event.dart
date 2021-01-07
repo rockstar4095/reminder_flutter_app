@@ -51,3 +51,5 @@ class OpenedReminderLoaded extends MainEvent {
         openedDateTime,
       ];
 }
+
+class EditReminderDialogOpened extends MainEvent {}
