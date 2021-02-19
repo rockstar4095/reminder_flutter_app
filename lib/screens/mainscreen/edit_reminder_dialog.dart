@@ -36,7 +36,8 @@ class _EditReminderDialog extends StatefulWidget {
 }
 
 class _EditReminderDialogState extends State<_EditReminderDialog> {
-  bool isShopping = false;
+  bool isShoppingReminder = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +86,9 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
     return AnimatedCrossFade(
       firstChild: _regularTitleField(context),
       secondChild: _shoppingTitleField(),
-      crossFadeState:
-          isShopping ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      crossFadeState: isShoppingReminder
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: Duration(milliseconds: 250),
     );
   }
@@ -99,6 +101,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
           // key is used to paste initial value from changing state.
           return _titleWrapper(
             title: TextFormField(
+              focusNode: _focusNode,
               key: Key(state.editedTitle),
               initialValue: state.editedTitle,
               decoration: InputDecoration(hintText: S.of(context).titleHint),
@@ -111,7 +114,10 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
                 Icons.shopping_cart,
                 color: Theme.of(context).primaryColor,
               ),
-              onPressed: () => setState(() => isShopping = true),
+              onPressed: () {
+                _focusNode.unfocus();
+                setState(() => isShoppingReminder = true);
+              },
             ),
           );
         },
@@ -130,7 +136,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
           Icons.remove_shopping_cart,
           color: Colors.white,
         ),
-        onPressed: () => setState(() => isShopping = false),
+        onPressed: () => setState(() => isShoppingReminder = false),
       ),
     );
   }
@@ -138,7 +144,9 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
   Widget _titleWrapper({Widget title, Widget iconButton}) => Container(
         height: 64,
         decoration: BoxDecoration(
-          color: isShopping ? Theme.of(context).primaryColor : Colors.white,
+          color: isShoppingReminder
+              ? Theme.of(context).primaryColor
+              : Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
