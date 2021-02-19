@@ -37,11 +37,13 @@ class OpenedReminderLoaded extends MainEvent {
   final String openedTitle;
   final String openedDescription;
   final DateTime openedDateTime;
+  final bool openedIsShoppingReminder;
 
   OpenedReminderLoaded({
     @required this.openedTitle,
     @required this.openedDescription,
     @required this.openedDateTime,
+    @required this.openedIsShoppingReminder,
   });
 
   @override
@@ -49,6 +51,7 @@ class OpenedReminderLoaded extends MainEvent {
         openedTitle,
         openedDescription,
         openedDateTime,
+        openedIsShoppingReminder,
       ];
 }
 

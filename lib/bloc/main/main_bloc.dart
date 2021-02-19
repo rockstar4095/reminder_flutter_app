@@ -49,6 +49,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         openedTitle: event.openedTitle,
         openedDescription: event.openedDescription,
         openedDateTime: event.openedDateTime,
+        openedIsShoppingReminder: event.openedIsShoppingReminder,
       );
     } else if (event is EditReminderDialogOpened) {
       yield* _disabledSelectMode();
@@ -74,6 +75,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         openedTitle: reminder.title,
         openedDescription: reminder.description,
         openedDateTime: reminder.dateTime,
+        openedIsShoppingReminder: reminder.isShoppingReminder,
       ),
     );
   }

@@ -96,17 +96,46 @@ class _ViewReminderDialog extends StatelessWidget {
             previous.openedDescription != current.openedDescription,
         builder: (context, state) {
           if (state.openedDescription.isEmpty) return SizedBox();
-          return Padding(
-            padding:
-                const EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 24),
-            child: Text(
-              state.openedDescription,
-              style:
-                  Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-            ),
-          );
+          return state.openedIsShoppingReminder
+              ? _shoppingDescription(context)
+              : _regularDescription(context);
         },
       );
+
+  Widget _regularDescription(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(
+      builder: (context, state) => Padding(
+        padding: const EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 24),
+        child: Text(
+          state.openedDescription,
+          style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _shoppingDescription(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(
+      builder: (context, state) {
+        final List<String> productsList = state.openedDescription.split(',')
+          ..forEach((element) {
+            element.trim();
+          });
+
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: productsList.length,
+            itemBuilder: (context, index) {
+              return Row(
+                children: [
+                  _CheckBox(),
+                  Text(productsList[index]),
+                ],
+              );
+            });
+      },
+    );
+  }
 
   Widget _editButton(BuildContext context) => SizedBox(
         width: double.infinity,
@@ -118,4 +147,24 @@ class _ViewReminderDialog extends StatelessWidget {
           },
         ),
       );
+}
+
+class _CheckBox extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _CheckBoxState();
+}
+
+class _CheckBoxState extends State<_CheckBox> {
+  bool _isChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(
+        value: _isChecked,
+        onChanged: (newValue) {
+          setState(() {
+            _isChecked = newValue;
+          });
+        });
+  }
 }
