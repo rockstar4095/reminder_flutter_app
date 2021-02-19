@@ -30,7 +30,14 @@ class EditReminderDialog {
       );
 }
 
-class _EditReminderDialog extends StatelessWidget {
+class _EditReminderDialog extends StatefulWidget {
+  @override
+  _EditReminderDialogState createState() => _EditReminderDialogState();
+}
+
+class _EditReminderDialogState extends State<_EditReminderDialog> {
+  bool isShopping = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,10 +49,9 @@ class _EditReminderDialog extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(bottom: 8.0),
         child: Column(
           children: [
-            SizedBox(height: 4),
             _titleField(context),
             SizedBox(height: 8),
             _descriptionField(context),
@@ -75,15 +81,24 @@ class _EditReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _titleField(BuildContext context) =>
+  Widget _titleField(BuildContext context) {
+    return AnimatedCrossFade(
+      firstChild: _regularTitleField(context),
+      secondChild: _shoppingTitleField(),
+      crossFadeState:
+          isShopping ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      duration: Duration(milliseconds: 250),
+    );
+  }
+
+  Widget _regularTitleField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
             previous.editedTitle.isEmpty && current.editedTitle.isNotEmpty,
         builder: (context, state) {
           // key is used to paste initial value from changing state.
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextFormField(
+          return _titleWrapper(
+            title: TextFormField(
               key: Key(state.editedTitle),
               initialValue: state.editedTitle,
               decoration: InputDecoration(hintText: S.of(context).titleHint),
@@ -91,8 +106,53 @@ class _EditReminderDialog extends StatelessWidget {
                     TitleChanged(title: input),
                   ),
             ),
+            iconButton: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () => setState(() => isShopping = true),
+            ),
           );
         },
+      );
+
+  Widget _shoppingTitleField() {
+    return _titleWrapper(
+      title: Text(
+        'Shopping',
+        style: Theme.of(context).textTheme.headline5.copyWith(
+              color: Colors.white,
+            ),
+      ),
+      iconButton: IconButton(
+        icon: Icon(
+          Icons.remove_shopping_cart,
+          color: Colors.white,
+        ),
+        onPressed: () => setState(() => isShopping = false),
+      ),
+    );
+  }
+
+  Widget _titleWrapper({Widget title, Widget iconButton}) => Container(
+        height: 64,
+        decoration: BoxDecoration(
+          color: isShopping ? Theme.of(context).primaryColor : Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16, top: 8, right: 8),
+          child: Row(
+            children: [
+              Expanded(child: title ?? SizedBox()),
+              iconButton ?? SizedBox(),
+            ],
+          ),
+        ),
       );
 
   Widget _descriptionField(BuildContext context) =>
