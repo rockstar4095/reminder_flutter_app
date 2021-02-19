@@ -68,20 +68,37 @@ class ReminderItem extends StatelessWidget {
             : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          child: Column(
+          child: Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(child: _reminderContent(context)),
-                  Text(_current.dateTime.hhmm()),
-                ],
+              if (_current.isShoppingReminder) _shoppingIcon(context),
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(child: _reminderContent(context)),
+                        Text(_current.dateTime.hhmm()),
+                      ],
+                    ),
+                    _reminderDescription(context),
+                  ],
+                ),
               ),
-              _reminderDescription(context),
             ],
           ),
         ),
       );
+
+  Widget _shoppingIcon(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: Icon(
+        Icons.shopping_cart,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
 
   Widget _reminderContent(BuildContext context) => RichText(
         overflow: TextOverflow.ellipsis,
