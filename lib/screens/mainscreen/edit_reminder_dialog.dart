@@ -36,7 +36,6 @@ class _EditReminderDialog extends StatefulWidget {
 }
 
 class _EditReminderDialogState extends State<_EditReminderDialog> {
-  bool isShoppingReminder = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -83,13 +82,17 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
       );
 
   Widget _titleField(BuildContext context) {
-    return AnimatedCrossFade(
-      firstChild: _regularTitleField(context),
-      secondChild: _shoppingTitleField(),
-      crossFadeState: isShoppingReminder
-          ? CrossFadeState.showSecond
-          : CrossFadeState.showFirst,
-      duration: Duration(milliseconds: 250),
+    return BlocBuilder<EditReminderBloc, EditReminderState>(
+      builder: (context, state) {
+        return AnimatedCrossFade(
+          firstChild: _regularTitleField(context),
+          secondChild: _shoppingTitleField(),
+          crossFadeState: state.isShoppingReminder
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          duration: Duration(milliseconds: 250),
+        );
+      },
     );
   }
 
@@ -103,7 +106,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
             title: TextFormField(
               focusNode: _focusNode,
               key: Key(state.editedTitle),
-              initialValue: state.editedTitle,
+              initialValue: state.isShoppingReminder ? '' : state.editedTitle,
               decoration: InputDecoration(hintText: S.of(context).titleHint),
               onChanged: (input) => context.read<EditReminderBloc>().add(
                     TitleChanged(title: input),
@@ -116,7 +119,9 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
               ),
               onPressed: () {
                 _focusNode.unfocus();
-                setState(() => isShoppingReminder = true);
+                context.read<EditReminderBloc>().add(
+                      ShoppingReminderSwitched(isShoppingReminder: true),
+                    );
               },
             ),
           );
@@ -136,29 +141,34 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
           Icons.remove_shopping_cart,
           color: Colors.white,
         ),
-        onPressed: () => setState(() => isShoppingReminder = false),
+        onPressed: () => context.read<EditReminderBloc>().add(
+              ShoppingReminderSwitched(isShoppingReminder: false),
+            ),
       ),
     );
   }
 
-  Widget _titleWrapper({Widget title, Widget iconButton}) => Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: isShoppingReminder
-              ? Theme.of(context).primaryColor
-              : Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+  Widget _titleWrapper({Widget title, Widget iconButton}) =>
+      BlocBuilder<EditReminderBloc, EditReminderState>(
+        builder: (context, state) => Container(
+          height: 64,
+          decoration: BoxDecoration(
+            color: state.isShoppingReminder
+                ? Theme.of(context).primaryColor
+                : Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, top: 8, right: 8),
-          child: Row(
-            children: [
-              Expanded(child: title ?? SizedBox()),
-              iconButton ?? SizedBox(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, right: 8),
+            child: Row(
+              children: [
+                Expanded(child: title ?? SizedBox()),
+                iconButton ?? SizedBox(),
+              ],
+            ),
           ),
         ),
       );
@@ -175,8 +185,11 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
             child: TextFormField(
               key: Key(state.editedDescription),
               initialValue: state.editedDescription,
-              decoration:
-                  InputDecoration(hintText: S.of(context).descriptionHint),
+              decoration: InputDecoration(
+                hintText: state.isShoppingReminder
+                    ? 'Вводите наименования через запятую'
+                    : S.of(context).descriptionHint,
+              ),
               maxLines: state.editedDescription.isEmpty ? 3 : null,
               onChanged: (input) => context.read<EditReminderBloc>().add(
                     DescriptionChanged(description: input),
@@ -253,7 +266,9 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
         text: S.of(context).saveButton,
         onPressed: () {
           final title = context.read<EditReminderBloc>().title;
-          if (title.isEmpty) {
+          final bool isShoppingReminder =
+              context.read<EditReminderBloc>().state.isShoppingReminder;
+          if (title.isEmpty && !isShoppingReminder) {
             _showEmptyTitleSnack(context);
             return;
           }
@@ -281,9 +296,13 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
 
   Reminder _formReminder(BuildContext context) => Reminder(
         id: context.read<EditReminderBloc>().currentReminderId,
-        title: context.read<EditReminderBloc>().title,
+        title: context.read<EditReminderBloc>().state.isShoppingReminder
+            ? 'Shopping'
+            : context.read<EditReminderBloc>().title,
         description: context.read<EditReminderBloc>().description,
         dateTime: _getDateTime(context),
+        isShoppingReminder:
+            context.read<EditReminderBloc>().state.isShoppingReminder,
       );
 
   DateTime _getDateTime(BuildContext context) => DateTime(

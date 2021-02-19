@@ -7,6 +7,7 @@ extension ReminderToReminderEntity on Reminder {
         title: title,
         description: description,
         dateTime: dateTime,
+        isShoppingReminder: isShoppingReminder,
       );
 }
 
@@ -26,6 +27,7 @@ extension ReminderEntityToReminder on ReminderEntity {
         title: title,
         description: description,
         dateTime: dateTime,
+        isShoppingReminder: isShoppingReminder,
       );
 }
 

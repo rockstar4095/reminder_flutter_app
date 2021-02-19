@@ -13,12 +13,15 @@ class ReminderEntity {
   final String description;
   @HiveField(3)
   final DateTime dateTime;
+  @HiveField(4)
+  final bool isShoppingReminder;
 
   ReminderEntity({
     @required this.index,
     @required this.title,
     @required this.dateTime,
     this.description = '',
+    @required this.isShoppingReminder,
   });
 
   ReminderEntity copyWith({
@@ -26,11 +29,13 @@ class ReminderEntity {
     String title,
     String description,
     String dateTime,
+    bool isShoppingReminder,
   }) =>
       ReminderEntity(
         index: index ?? this.index,
         title: title ?? this.title,
         description: description ?? this.description,
         dateTime: dateTime ?? this.dateTime,
+        isShoppingReminder: isShoppingReminder ?? this.isShoppingReminder,
       );
 }

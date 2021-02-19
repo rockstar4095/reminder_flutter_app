@@ -7,6 +7,7 @@ class Reminder extends Equatable {
   final String description;
   final DateTime dateTime;
   final bool isSelected;
+  final bool isShoppingReminder;
 
   Reminder({
     @required this.id,
@@ -14,6 +15,7 @@ class Reminder extends Equatable {
     @required this.dateTime,
     this.description = '',
     this.isSelected = false,
+    @required this.isShoppingReminder,
   });
 
   Reminder copyWith({
@@ -22,6 +24,7 @@ class Reminder extends Equatable {
     String description,
     DateTime dateTime,
     bool isSelected,
+    bool isShoppingReminder,
   }) =>
       Reminder(
         id: id ?? this.id,
@@ -29,6 +32,7 @@ class Reminder extends Equatable {
         description: description ?? this.description,
         dateTime: dateTime ?? this.dateTime,
         isSelected: isSelected ?? this.isSelected,
+        isShoppingReminder: isShoppingReminder ?? this.isShoppingReminder,
       );
 
   @override
@@ -38,5 +42,9 @@ class Reminder extends Equatable {
         description,
         dateTime,
         isSelected,
+        isShoppingReminder,
       ];
+
+  @override
+  bool get stringify => true;
 }

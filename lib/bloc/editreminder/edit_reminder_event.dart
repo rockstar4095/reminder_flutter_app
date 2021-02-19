@@ -58,3 +58,14 @@ class ExistingReminderOpened extends EditReminderEvent {
   @override
   List<Object> get props => [reminder];
 }
+
+class ShoppingReminderSwitched extends EditReminderEvent {
+  final bool isShoppingReminder;
+
+  ShoppingReminderSwitched({
+    @required this.isShoppingReminder,
+  }) : assert(isShoppingReminder != null);
+
+  @override
+  List<Object> get props => [isShoppingReminder];
+}

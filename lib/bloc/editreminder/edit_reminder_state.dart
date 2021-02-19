@@ -5,6 +5,7 @@ class EditReminderState extends Equatable {
   final String editedDescription;
   final DateTime date;
   final TimeOfDay time;
+  final bool isShoppingReminder;
 
   factory EditReminderState.initialState() => EditReminderState(
         editedTitle: '',
@@ -15,6 +16,7 @@ class EditReminderState extends Equatable {
           DateTime.now().day,
         ),
         time: TimeOfDay.now(),
+        isShoppingReminder: false,
       );
 
   EditReminderState({
@@ -22,6 +24,7 @@ class EditReminderState extends Equatable {
     @required this.editedDescription,
     @required this.date,
     @required this.time,
+    @required this.isShoppingReminder,
   });
 
   EditReminderState copyWith({
@@ -29,12 +32,14 @@ class EditReminderState extends Equatable {
     String description,
     DateTime date,
     TimeOfDay time,
+    bool isShoppingReminder,
   }) =>
       EditReminderState(
         editedTitle: title ?? this.editedTitle,
         editedDescription: description ?? this.editedDescription,
         date: date ?? this.date,
         time: time ?? this.time,
+        isShoppingReminder: isShoppingReminder ?? this.isShoppingReminder,
       );
 
   @override
@@ -43,5 +48,6 @@ class EditReminderState extends Equatable {
         editedDescription,
         date,
         time,
+        isShoppingReminder,
       ];
 }

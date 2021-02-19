@@ -19,7 +19,9 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
   final int currentReminderId;
   String _title = '';
   String _description = '';
+
   String get title => _title;
+
   String get description => _description;
 
   EditReminderBloc(
@@ -51,15 +53,22 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
     } else if (event is ExistingReminderOpened) {
       final reminder = event.reminder;
 
-      _title = reminder.title;
-      _description = reminder.description;
+      if (reminder.isShoppingReminder) {
+        _title = '';
+      } else {
+        _title = reminder.title;
+      }
 
+      _description = reminder.description;
       yield state.copyWith(
         title: reminder.title,
         description: reminder.description,
         date: _getReminderDate(reminder.dateTime),
         time: _getReminderTime(reminder.dateTime),
+        isShoppingReminder: reminder.isShoppingReminder,
       );
+    } else if (event is ShoppingReminderSwitched) {
+      yield state.copyWith(isShoppingReminder: event.isShoppingReminder);
     }
   }
 

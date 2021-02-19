@@ -21,13 +21,14 @@ class ReminderEntityAdapter extends TypeAdapter<ReminderEntity> {
       title: fields[1] as String,
       dateTime: fields[3] as DateTime,
       description: fields[2] as String,
+      isShoppingReminder: fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ReminderEntity obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.index)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ReminderEntityAdapter extends TypeAdapter<ReminderEntity> {
       ..writeByte(2)
       ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.dateTime);
+      ..write(obj.dateTime)
+      ..writeByte(4)
+      ..write(obj.isShoppingReminder);
   }
 
   @override
