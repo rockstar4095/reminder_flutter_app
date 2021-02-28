@@ -47,7 +47,7 @@ class MainScreen extends StatelessWidget {
   Widget _remindersList(BuildContext context) =>
       BlocBuilder<MainBloc, MainState>(
         builder: (context, state) {
-          if (state.wereTripsLoaded && state.reminders.isEmpty) {
+          if (state.wereRemindersLoaded && state.reminders.isEmpty) {
             return _noRemindersPlaceholder(context);
           }
 

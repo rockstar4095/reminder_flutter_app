@@ -4,20 +4,12 @@ class MainState extends Equatable {
   final bool isSelectedModeActive;
   final List<Reminder> reminders;
   final int quantityOfSelectedItems;
-  final String openedTitle;
-  final String openedDescription;
-  final DateTime openedDateTime;
-  final bool wereTripsLoaded;
-  final bool openedIsShoppingReminder;
+  final bool wereRemindersLoaded;
 
   MainState({
     @required this.isSelectedModeActive,
     @required this.reminders,
-    @required this.openedTitle,
-    @required this.openedDescription,
-    @required this.openedDateTime,
-    @required this.wereTripsLoaded,
-    @required this.openedIsShoppingReminder,
+    @required this.wereRemindersLoaded,
   }) : quantityOfSelectedItems =
             reminders.where((reminder) => reminder.isSelected).length;
 
@@ -33,22 +25,13 @@ class MainState extends Equatable {
       MainState(
         isSelectedModeActive: isSelectedModeActive ?? this.isSelectedModeActive,
         reminders: List<Reminder>()..addAll(reminders ?? this.reminders),
-        openedTitle: openedTitle ?? this.openedTitle,
-        openedDescription: openedDescription ?? this.openedDescription,
-        openedDateTime: openedDateTime ?? this.openedDateTime,
-        wereTripsLoaded: wereTripsLoaded ?? this.wereTripsLoaded,
-        openedIsShoppingReminder:
-            openedIsShoppingReminder ?? this.openedIsShoppingReminder,
+        wereRemindersLoaded: wereTripsLoaded ?? this.wereRemindersLoaded,
       );
 
   factory MainState.initialState() => MainState(
         isSelectedModeActive: false,
         reminders: <Reminder>[],
-        openedTitle: '',
-        openedDescription: '',
-        openedDateTime: DateTime.fromMillisecondsSinceEpoch(0),
-        wereTripsLoaded: false,
-        openedIsShoppingReminder: true,
+        wereRemindersLoaded: false,
       );
 
   @override
@@ -56,10 +39,6 @@ class MainState extends Equatable {
         isSelectedModeActive,
         reminders,
         quantityOfSelectedItems,
-        openedTitle,
-        openedDescription,
-        openedDateTime,
-        wereTripsLoaded,
-        openedIsShoppingReminder,
+        wereRemindersLoaded,
       ];
 }

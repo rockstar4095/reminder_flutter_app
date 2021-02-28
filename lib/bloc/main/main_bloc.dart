@@ -42,15 +42,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       await _deleteReminders();
       _loadReminders();
       add(SelectModeDisabled());
-    } else if (event is ReminderOpened) {
-      _loadReminder(event.reminderId);
-    } else if (event is OpenedReminderLoaded) {
-      yield state.copyWith(
-        openedTitle: event.openedTitle,
-        openedDescription: event.openedDescription,
-        openedDateTime: event.openedDateTime,
-        openedIsShoppingReminder: event.openedIsShoppingReminder,
-      );
     } else if (event is EditReminderDialogOpened) {
       yield* _disabledSelectMode();
     }
@@ -66,18 +57,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
     yield state.copyWith(reminders: unselectedReminders);
     add(SelectModeDisabled());
-  }
-
-  Future<void> _loadReminder(int id) async {
-    final reminder = await _getReminder(id);
-    add(
-      OpenedReminderLoaded(
-        openedTitle: reminder.title,
-        openedDescription: reminder.description,
-        openedDateTime: reminder.dateTime,
-        openedIsShoppingReminder: reminder.isShoppingReminder,
-      ),
-    );
   }
 
   void onItemSelect(int reminderId) {
@@ -101,6 +80,4 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     _repository.deleteReminders(reminders);
     reminders.forEach((it) => notificationsPlugin.cancel(it.id));
   }
-
-  Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
 }

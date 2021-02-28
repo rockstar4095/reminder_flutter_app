@@ -4,6 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reminder_flutter_app/app_theme.dart';
+import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
+import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/bloc_builder.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/repository_builder.dart';
@@ -45,8 +47,15 @@ class AppBlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget provider = BlocProvider(
-      create: (context) => Blocs.mainBloc(context),
+    Widget provider = MultiBlocProvider(
+      providers: [
+        BlocProvider<ViewReminderBloc>(
+          create: (context) => Blocs.viewReminderBloc(context),
+        ),
+        BlocProvider<MainBloc>(
+          create: (context) => Blocs.mainBloc(context),
+        )
+      ],
       child: child,
     );
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
-import 'package:reminder_flutter_app/bloc/main/main_event.dart';
+import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
@@ -10,7 +9,9 @@ import 'package:reminder_flutter_app/widget/buttons.dart';
 
 class ViewReminderDialog {
   static void open(BuildContext context, int reminderId) {
-    context.read<MainBloc>().add(ReminderOpened(reminderId: reminderId));
+    context.read<ViewReminderBloc>().add(
+          ReminderOpened(reminderId: reminderId),
+        );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -61,7 +62,8 @@ class _ViewReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _dateTime(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+  Widget _dateTime(BuildContext context) =>
+      BlocBuilder<ViewReminderBloc, ViewReminderState>(
         buildWhen: (previous, current) =>
             previous.openedDateTime != current.openedDateTime,
         builder: (context, state) {
@@ -80,7 +82,8 @@ class _ViewReminderDialog extends StatelessWidget {
         },
       );
 
-  Widget _title(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+  Widget _title(BuildContext context) =>
+      BlocBuilder<ViewReminderBloc, ViewReminderState>(
         buildWhen: (previous, current) =>
             previous.openedTitle != current.openedTitle,
         builder: (context, state) => Align(
@@ -91,7 +94,8 @@ class _ViewReminderDialog extends StatelessWidget {
         ),
       );
 
-  Widget _description(BuildContext context) => BlocBuilder<MainBloc, MainState>(
+  Widget _description(BuildContext context) =>
+      BlocBuilder<ViewReminderBloc, ViewReminderState>(
         buildWhen: (previous, current) =>
             previous.openedDescription != current.openedDescription,
         builder: (context, state) {
@@ -103,7 +107,7 @@ class _ViewReminderDialog extends StatelessWidget {
       );
 
   Widget _regularDescription(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
+    return BlocBuilder<ViewReminderBloc, ViewReminderState>(
       builder: (context, state) => Padding(
         padding: const EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 24),
         child: Text(
@@ -115,7 +119,7 @@ class _ViewReminderDialog extends StatelessWidget {
   }
 
   Widget _shoppingDescription(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
+    return BlocBuilder<ViewReminderBloc, ViewReminderState>(
       builder: (context, state) {
         final List<String> productsList = state.openedDescription.split(',')
           ..forEach((element) {
