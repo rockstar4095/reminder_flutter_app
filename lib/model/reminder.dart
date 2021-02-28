@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:reminder_flutter_app/model/product.dart';
 
 class Reminder extends Equatable {
   final int id;
@@ -8,6 +9,7 @@ class Reminder extends Equatable {
   final DateTime dateTime;
   final bool isSelected;
   final bool isShoppingReminder;
+  final List<Product> products;
 
   Reminder({
     @required this.id,
@@ -16,6 +18,7 @@ class Reminder extends Equatable {
     this.description = '',
     this.isSelected = false,
     @required this.isShoppingReminder,
+    @required this.products,
   });
 
   Reminder copyWith({
@@ -25,6 +28,7 @@ class Reminder extends Equatable {
     DateTime dateTime,
     bool isSelected,
     bool isShoppingReminder,
+    bool products,
   }) =>
       Reminder(
         id: id ?? this.id,
@@ -33,6 +37,7 @@ class Reminder extends Equatable {
         dateTime: dateTime ?? this.dateTime,
         isSelected: isSelected ?? this.isSelected,
         isShoppingReminder: isShoppingReminder ?? this.isShoppingReminder,
+        products: products ?? this.products,
       );
 
   @override
@@ -43,6 +48,7 @@ class Reminder extends Equatable {
         dateTime,
         isSelected,
         isShoppingReminder,
+        products,
       ];
 
   @override

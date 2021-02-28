@@ -1,4 +1,6 @@
+import 'package:reminder_flutter_app/entity/product_entity.dart';
 import 'package:reminder_flutter_app/entity/reminder_entity.dart';
+import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 
 extension ReminderToReminderEntity on Reminder {
@@ -8,6 +10,7 @@ extension ReminderToReminderEntity on Reminder {
         description: description,
         dateTime: dateTime,
         isShoppingReminder: isShoppingReminder,
+        products: products.map((e) => e.toProductEntity()),
       );
 }
 
@@ -28,6 +31,7 @@ extension ReminderEntityToReminder on ReminderEntity {
         description: description,
         dateTime: dateTime,
         isShoppingReminder: isShoppingReminder,
+        products: products.map((e) => e.toProduct()),
       );
 }
 
@@ -39,4 +43,18 @@ extension ReminderEnititesToRemonders on List<ReminderEntity> {
       (index) => this[index].toReminder(),
     );
   }
+}
+
+extension on Product {
+  ProductEntity toProductEntity() => ProductEntity(
+        name: name,
+        isChecked: isChecked,
+      );
+}
+
+extension on ProductEntity {
+  Product toProduct() => Product(
+        name: name,
+        isChecked: isChecked,
+      );
 }
