@@ -119,7 +119,12 @@ class _ViewReminderDialog extends StatelessWidget {
       builder: (context, state) {
         final reminder = state.reminder;
         final List<Product> productsList =
-            reminder.products.toList(growable: false);
+            reminder.products.toList(growable: false)
+              ..sort((e1, e2) {
+                if (e1.isChecked) return 1;
+                if (e2.isChecked) return -1;
+                return e1.name.compareTo(e2.name);
+              });
 
         return ListView.builder(
             shrinkWrap: true,
@@ -162,13 +167,11 @@ class _CheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Checkbox(
         value: product.isChecked,
-        onChanged: product.isChecked
-            ? null
-            : (newValue) {
-                context.read<ViewReminderBloc>().add(ProductCheckChanged(
-                      reminder: reminder,
-                      product: product.copyWith(isChecked: newValue),
-                    ));
-              });
+        onChanged: (newValue) {
+          context.read<ViewReminderBloc>().add(ProductCheckChanged(
+                reminder: reminder,
+                product: product.copyWith(isChecked: newValue),
+              ));
+        });
   }
 }
