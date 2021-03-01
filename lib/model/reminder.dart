@@ -9,7 +9,7 @@ class Reminder extends Equatable {
   final DateTime dateTime;
   final bool isSelected;
   final bool isShoppingReminder;
-  final List<Product> products;
+  final Set<Product> products;
 
   Reminder({
     @required this.id,
@@ -28,7 +28,7 @@ class Reminder extends Equatable {
     DateTime dateTime,
     bool isSelected,
     bool isShoppingReminder,
-    List<Product> products,
+    Set<Product> products,
   }) =>
       Reminder(
         id: id ?? this.id,

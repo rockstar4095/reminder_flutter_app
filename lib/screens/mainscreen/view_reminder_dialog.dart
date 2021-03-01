@@ -118,7 +118,8 @@ class _ViewReminderDialog extends StatelessWidget {
     return BlocBuilder<ViewReminderBloc, ViewReminderState>(
       builder: (context, state) {
         final reminder = state.reminder;
-        final List<Product> productsList = reminder.products;
+        final List<Product> productsList =
+            reminder.products.toList(growable: false);
 
         return ListView.builder(
             shrinkWrap: true,

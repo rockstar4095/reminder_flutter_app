@@ -28,7 +28,7 @@ class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
             isSelected: false,
             isShoppingReminder: false,
             id: 0,
-            products: [],
+            products: {},
           ),
         ));
 
@@ -41,7 +41,7 @@ class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
       _loadReminder(event.reminderId);
     } else if (event is ProductCheckChanged) {
       final reminder = event.reminder;
-      final List<Product> products = []..addAll(reminder.products ?? []);
+      final Set<Product> products = {}..addAll(reminder.products ?? {});
 
       products.removeWhere((e) => e.name == event.product.name);
       products.add(event.product);

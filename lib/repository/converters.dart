@@ -38,8 +38,7 @@ extension ReminderEntityToReminder on ReminderEntity {
       description: description,
       dateTime: dateTime,
       isShoppingReminder: isShoppingReminder,
-      products:
-          products?.map((e) => e.toProduct())?.toList(growable: false) ?? [],
+      products: products?.map((e) => e.toProduct())?.toSet() ?? {},
     );
   }
 }

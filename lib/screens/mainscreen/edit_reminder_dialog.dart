@@ -310,8 +310,8 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
                 .description
                 .split(',')
                 .map((e) => Product(name: e.trim(), isChecked: false))
-                .toList(growable: false)
-            : [],
+                .toSet()
+            : {},
       );
 
   DateTime _getDateTime(BuildContext context) => DateTime(
