@@ -22,13 +22,14 @@ class ReminderEntityAdapter extends TypeAdapter<ReminderEntity> {
       dateTime: fields[3] as DateTime,
       description: fields[2] as String,
       isShoppingReminder: fields[4] as bool,
+      products: (fields[5] as List)?.cast<ProductEntity>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ReminderEntity obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.index)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class ReminderEntityAdapter extends TypeAdapter<ReminderEntity> {
       ..writeByte(3)
       ..write(obj.dateTime)
       ..writeByte(4)
-      ..write(obj.isShoppingReminder);
+      ..write(obj.isShoppingReminder)
+      ..writeByte(5)
+      ..write(obj.products);
   }
 
   @override

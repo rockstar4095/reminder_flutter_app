@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
+import 'package:reminder_flutter_app/model/product.dart';
+import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/edit_reminder_dialog.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
@@ -64,11 +66,9 @@ class _ViewReminderDialog extends StatelessWidget {
 
   Widget _dateTime(BuildContext context) =>
       BlocBuilder<ViewReminderBloc, ViewReminderState>(
-        buildWhen: (previous, current) =>
-            previous.openedDateTime != current.openedDateTime,
         builder: (context, state) {
-          final String date = state.openedDateTime.ddMMyy();
-          final String time = state.openedDateTime.hhmm();
+          final String date = state.reminder.dateTime.ddMMyy();
+          final String time = state.reminder.dateTime.hhmm();
 
           return Center(
             child: Padding(
@@ -84,11 +84,9 @@ class _ViewReminderDialog extends StatelessWidget {
 
   Widget _title(BuildContext context) =>
       BlocBuilder<ViewReminderBloc, ViewReminderState>(
-        buildWhen: (previous, current) =>
-            previous.openedTitle != current.openedTitle,
         builder: (context, state) => Align(
           child: Text(
-            state.openedTitle,
+            state.reminder.title,
             style: Theme.of(context).textTheme.headline6,
           ),
         ),
@@ -96,11 +94,9 @@ class _ViewReminderDialog extends StatelessWidget {
 
   Widget _description(BuildContext context) =>
       BlocBuilder<ViewReminderBloc, ViewReminderState>(
-        buildWhen: (previous, current) =>
-            previous.openedDescription != current.openedDescription,
         builder: (context, state) {
-          if (state.openedDescription.isEmpty) return SizedBox();
-          return state.openedIsShoppingReminder
+          if (state.reminder.description.isEmpty) return SizedBox();
+          return state.reminder.isShoppingReminder
               ? _shoppingDescription(context)
               : _regularDescription(context);
         },
@@ -111,7 +107,7 @@ class _ViewReminderDialog extends StatelessWidget {
       builder: (context, state) => Padding(
         padding: const EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 24),
         child: Text(
-          state.openedDescription,
+          state.reminder.description,
           style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
         ),
       ),
@@ -121,10 +117,8 @@ class _ViewReminderDialog extends StatelessWidget {
   Widget _shoppingDescription(BuildContext context) {
     return BlocBuilder<ViewReminderBloc, ViewReminderState>(
       builder: (context, state) {
-        final List<String> productsList = state.openedDescription.split(',')
-          ..forEach((element) {
-            element.trim();
-          });
+        final reminder = state.reminder;
+        final List<Product> productsList = reminder.products;
 
         return ListView.builder(
             shrinkWrap: true,
@@ -132,8 +126,8 @@ class _ViewReminderDialog extends StatelessWidget {
             itemBuilder: (context, index) {
               return Row(
                 children: [
-                  _CheckBox(),
-                  Text(productsList[index]),
+                  _CheckBox(reminder: reminder, product: productsList[index]),
+                  Text(productsList[index].name),
                 ],
               );
             });
@@ -153,22 +147,27 @@ class _ViewReminderDialog extends StatelessWidget {
       );
 }
 
-class _CheckBox extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _CheckBoxState();
-}
+class _CheckBox extends StatelessWidget {
+  final Reminder reminder;
+  final Product product;
 
-class _CheckBoxState extends State<_CheckBox> {
-  bool _isChecked = false;
+  const _CheckBox({
+    @required this.product,
+    @required this.reminder,
+  })  : assert(product != null),
+        assert(reminder != null);
 
   @override
   Widget build(BuildContext context) {
     return Checkbox(
-        value: _isChecked,
-        onChanged: (newValue) {
-          setState(() {
-            _isChecked = newValue;
-          });
-        });
+        value: product.isChecked,
+        onChanged: product.isChecked
+            ? null
+            : (newValue) {
+                context.read<ViewReminderBloc>().add(ProductCheckChanged(
+                      reminder: reminder,
+                      product: product.copyWith(isChecked: newValue),
+                    ));
+              });
   }
 }

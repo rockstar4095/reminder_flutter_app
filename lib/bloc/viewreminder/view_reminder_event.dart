@@ -24,23 +24,27 @@ class ReminderOpened extends ViewReminderEvent {
 }
 
 class OpenedReminderLoaded extends ViewReminderEvent {
-  final String openedTitle;
-  final String openedDescription;
-  final DateTime openedDateTime;
-  final bool openedIsShoppingReminder;
+  final Reminder reminder;
 
-  OpenedReminderLoaded({
-    @required this.openedTitle,
-    @required this.openedDescription,
-    @required this.openedDateTime,
-    @required this.openedIsShoppingReminder,
-  });
+  OpenedReminderLoaded({@required this.reminder}) : assert(reminder != null);
+
+  @override
+  List<Object> get props => [reminder];
+}
+
+class ProductCheckChanged extends ViewReminderEvent {
+  final Reminder reminder;
+  final Product product;
+
+  ProductCheckChanged({
+    @required this.product,
+    @required this.reminder,
+  })  : assert(product != null),
+        assert(reminder != null);
 
   @override
   List<Object> get props => [
-        openedTitle,
-        openedDescription,
-        openedDateTime,
-        openedIsShoppingReminder,
+        product,
+        reminder,
       ];
 }

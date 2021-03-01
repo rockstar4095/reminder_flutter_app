@@ -4,14 +4,19 @@ import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 
 extension ReminderToReminderEntity on Reminder {
-  ReminderEntity toReminderEntity() => ReminderEntity(
-        index: id,
-        title: title,
-        description: description,
-        dateTime: dateTime,
-        isShoppingReminder: isShoppingReminder,
-        products: products.map((e) => e.toProductEntity()),
-      );
+  ReminderEntity toReminderEntity() {
+    if (this == null) return null;
+    return ReminderEntity(
+      index: id,
+      title: title,
+      description: description,
+      dateTime: dateTime,
+      isShoppingReminder: isShoppingReminder,
+      products:
+          products?.map((e) => e.toProductEntity())?.toList(growable: false) ??
+              [],
+    );
+  }
 }
 
 extension RemindersToReminderEntitites on List<Reminder> {
@@ -25,14 +30,18 @@ extension RemindersToReminderEntitites on List<Reminder> {
 }
 
 extension ReminderEntityToReminder on ReminderEntity {
-  Reminder toReminder() => Reminder(
-        id: index,
-        title: title,
-        description: description,
-        dateTime: dateTime,
-        isShoppingReminder: isShoppingReminder,
-        products: products.map((e) => e.toProduct()),
-      );
+  Reminder toReminder() {
+    if (this == null) return null;
+    return Reminder(
+      id: index,
+      title: title,
+      description: description,
+      dateTime: dateTime,
+      isShoppingReminder: isShoppingReminder,
+      products:
+          products?.map((e) => e.toProduct())?.toList(growable: false) ?? [],
+    );
+  }
 }
 
 extension ReminderEnititesToRemonders on List<ReminderEntity> {

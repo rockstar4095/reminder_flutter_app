@@ -7,6 +7,7 @@ import 'package:reminder_flutter_app/app_theme.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/bloc_builder.dart';
+import 'package:reminder_flutter_app/entity/product_entity.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/repository_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
@@ -23,6 +24,7 @@ Future<void> initHive() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
   Hive.registerAdapter(ReminderEntityAdapter());
+  Hive.registerAdapter(ProductEntityAdapter());
 }
 
 class App extends StatelessWidget {

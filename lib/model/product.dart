@@ -10,6 +10,14 @@ class Product extends Equatable {
     @required this.isChecked,
   });
 
+  Product copyWith({
+    @required isChecked,
+  }) =>
+      Product(
+        name: this.name,
+        isChecked: isChecked ?? this.isChecked,
+      );
+
   @override
   List<Object> get props => [
         name,

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/editreminder/edit_reminder_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
+import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
@@ -303,6 +304,14 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
         dateTime: _getDateTime(context),
         isShoppingReminder:
             context.read<EditReminderBloc>().state.isShoppingReminder,
+        products: context.read<EditReminderBloc>().state.isShoppingReminder
+            ? context
+                .read<EditReminderBloc>()
+                .description
+                .split(',')
+                .map((e) => Product(name: e.trim(), isChecked: false))
+                .toList(growable: false)
+            : [],
       );
 
   DateTime _getDateTime(BuildContext context) => DateTime(
