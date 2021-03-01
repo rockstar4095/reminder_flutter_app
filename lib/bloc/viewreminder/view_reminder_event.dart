@@ -48,3 +48,5 @@ class ProductCheckChanged extends ViewReminderEvent {
         reminder,
       ];
 }
+
+class DialogClosed extends ViewReminderEvent {}

@@ -9,8 +9,10 @@ import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/bloc_builder.dart';
 import 'package:reminder_flutter_app/entity/product_entity.dart';
 import 'package:reminder_flutter_app/generated/l10n.dart';
+import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/repository_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
+import 'package:reminder_flutter_app/utils/wakelock.dart';
 
 import 'entity/reminder_entity.dart';
 
@@ -61,8 +63,13 @@ class AppBlocProvider extends StatelessWidget {
       child: child,
     );
 
-    provider = RepositoryProvider(
+    provider = RepositoryProvider<MainRepository>(
       create: (context) => Repositories.mainRepository(),
+      child: provider,
+    );
+
+    provider = RepositoryProvider<WakeLock>(
+      create: (context) => Repositories.wakeLock(),
       child: provider,
     );
 

@@ -19,7 +19,7 @@ class ViewReminderDialog {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _ViewReminderDialog(reminderId),
-    );
+    ).then((_) => context.read<ViewReminderBloc>().add(DialogClosed()));
   }
 }
 

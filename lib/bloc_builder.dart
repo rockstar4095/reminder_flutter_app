@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/viewreminder/view_reminder_bloc.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
+import 'package:reminder_flutter_app/utils/wakelock.dart';
 
 class Blocs {
   Blocs._();
@@ -11,5 +12,8 @@ class Blocs {
       MainBloc(context.read<MainRepository>());
 
   static ViewReminderBloc viewReminderBloc(BuildContext context) =>
-      ViewReminderBloc(context.read<MainRepository>());
+      ViewReminderBloc(
+        repository: context.read<MainRepository>(),
+        wakeLock: context.read<WakeLock>(),
+      );
 }

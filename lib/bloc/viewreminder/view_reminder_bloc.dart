@@ -6,15 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
+import 'package:reminder_flutter_app/utils/wakelock.dart';
 
 part 'view_reminder_event.dart';
 part 'view_reminder_state.dart';
 
 class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
-  final MainRepository _repository;
+  final MainRepository repository;
+  final WakeLock wakeLock;
 
-  ViewReminderBloc(this._repository)
-      : super(ViewReminderState(
+  ViewReminderBloc({
+    @required this.repository,
+    @required this.wakeLock,
+  })  : assert(repository != null),
+        assert(wakeLock != null),
+        super(ViewReminderState(
           reminder: Reminder(
             title: '',
             description: '',
@@ -29,6 +35,7 @@ class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
   @override
   Stream<ViewReminderState> mapEventToState(ViewReminderEvent event) async* {
     if (event is ReminderLoaded) {
+      if (event.reminder.isShoppingReminder) wakeLock.turnOn();
       yield ViewReminderState(reminder: event.reminder);
     } else if (event is ReminderOpened) {
       _loadReminder(event.reminderId);
@@ -41,6 +48,10 @@ class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
 
       await _updateReminder(reminder.copyWith(products: products));
       _loadReminder(reminder.id);
+    } else if (event is DialogClosed) {
+      if (await wakeLock.isOn()) {
+        wakeLock.turnOff();
+      }
     }
   }
 
@@ -49,8 +60,8 @@ class ViewReminderBloc extends Bloc<ViewReminderEvent, ViewReminderState> {
     add(ReminderLoaded(reminder: reminder));
   }
 
-  Future<Reminder> _getReminder(int id) => _repository.getReminder(id);
+  Future<Reminder> _getReminder(int id) => repository.getReminder(id);
 
   Future<void> _updateReminder(Reminder reminder) =>
-      _repository.updateReminder(reminder);
+      repository.updateReminder(reminder);
 }
