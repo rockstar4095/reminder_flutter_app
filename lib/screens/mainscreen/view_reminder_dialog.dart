@@ -128,13 +128,26 @@ class _ViewReminderDialog extends StatelessWidget {
               });
 
         return ListView.builder(
+            padding: state.reminder.isShoppingReminder
+                ? const EdgeInsets.symmetric(horizontal: 16)
+                : null,
             shrinkWrap: true,
             itemCount: productsList.length,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Row(
                 children: [
                   _CheckBox(reminder: reminder, product: productsList[index]),
-                  Text(productsList[index].name),
+                  Expanded(
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      text: TextSpan(
+                        text: productsList[index].name,
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                    ),
+                  ),
                 ],
               );
             });
