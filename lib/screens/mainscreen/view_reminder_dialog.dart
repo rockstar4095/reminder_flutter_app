@@ -48,6 +48,7 @@ class _ViewReminderDialog extends StatelessWidget {
             _title(context),
             SizedBox(height: 16),
             _description(context),
+            SizedBox(height: 16),
             _editButton(context),
             SizedBox(height: 16),
           ],

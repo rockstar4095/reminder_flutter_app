@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reminder_flutter_app/bloc/main/main_bloc.dart';
 import 'package:reminder_flutter_app/bloc/main/main_event.dart';
+import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:timezone/data/latest_all.dart' as timeZone;
@@ -40,8 +41,8 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
       final insertedReminder = _isReminderUpdate()
           ? await _updateReminder(event.reminder)
           : await _saveReminder(event.reminder);
-      await _saveNotification(insertedReminder);
       _mainBloc.add(SaveReminderPressed());
+      await _saveNotification(insertedReminder);
     } else if (event is TitleChanged) {
       _title = event.title;
     } else if (event is DescriptionChanged) {
@@ -66,6 +67,7 @@ class EditReminderBloc extends Bloc<EditReminderEvent, EditReminderState> {
         date: _getReminderDate(reminder.dateTime),
         time: _getReminderTime(reminder.dateTime),
         isShoppingReminder: reminder.isShoppingReminder,
+        products: reminder.products,
       );
     } else if (event is ShoppingReminderSwitched) {
       yield state.copyWith(isShoppingReminder: event.isShoppingReminder);

@@ -295,24 +295,55 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
         ),
       );
 
-  Reminder _formReminder(BuildContext context) => Reminder(
-        id: context.read<EditReminderBloc>().currentReminderId,
-        title: context.read<EditReminderBloc>().state.isShoppingReminder
-            ? 'Shopping'
-            : context.read<EditReminderBloc>().title,
-        description: context.read<EditReminderBloc>().description,
-        dateTime: _getDateTime(context),
-        isShoppingReminder:
-            context.read<EditReminderBloc>().state.isShoppingReminder,
-        products: context.read<EditReminderBloc>().state.isShoppingReminder
+  Reminder _formReminder(BuildContext context) {
+    return Reminder(
+      id: context.read<EditReminderBloc>().currentReminderId,
+      title: context.read<EditReminderBloc>().state.isShoppingReminder
+          ? 'Shopping'
+          : context.read<EditReminderBloc>().title,
+      description: context.read<EditReminderBloc>().description,
+      dateTime: _getDateTime(context),
+      isShoppingReminder:
+          context.read<EditReminderBloc>().state.isShoppingReminder,
+      products: _getProducts(),
+    );
+  }
+
+  Set<Product> _getProducts() {
+    final Set<Product> productsFromInputAndReminder = {};
+
+    final Set<Product> productsFromInput =
+        context.read<EditReminderBloc>().state.isShoppingReminder
             ? context
                 .read<EditReminderBloc>()
                 .description
                 .split(',')
                 .map((e) => Product(name: e.trim(), isChecked: false))
                 .toSet()
-            : {},
-      );
+            : {};
+
+    final Set<String> productsFromInputNames =
+        productsFromInput.map((e) => e.name).toSet();
+
+    final Set<Product> productsFromReminder =
+        context.read<EditReminderBloc>().state.products;
+
+    final Set<String> productsFromReminderNames =
+        productsFromReminder.map((e) => e.name).toSet();
+
+    productsFromInputAndReminder.addAll(
+      productsFromInput
+          .where((e) => !productsFromReminderNames.contains(e.name))
+          .toSet(),
+    );
+
+    productsFromInputAndReminder.addAll(productsFromReminder);
+
+    productsFromInputAndReminder
+        .removeWhere((e) => !productsFromInputNames.contains(e.name));
+
+    return productsFromInputAndReminder;
+  }
 
   DateTime _getDateTime(BuildContext context) => DateTime(
         context.read<EditReminderBloc>().state.date.year,
