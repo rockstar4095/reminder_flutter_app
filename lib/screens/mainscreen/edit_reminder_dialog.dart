@@ -7,6 +7,7 @@ import 'package:reminder_flutter_app/model/product.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/utils/extensions.dart';
+import 'package:reminder_flutter_app/utils/notifications.dart';
 import 'package:reminder_flutter_app/utils/widgets.dart';
 import 'package:reminder_flutter_app/widget/buttons.dart';
 
@@ -18,9 +19,10 @@ class EditReminderDialog {
         backgroundColor: Colors.transparent,
         builder: (context) => BlocProvider(
           create: (context) => EditReminderBloc(
-            context.read<MainRepository>(),
-            context.read<MainBloc>(),
-            reminderId,
+            repository: context.read<MainRepository>(),
+            mainBloc: context.read<MainBloc>(),
+            notifications: context.read<Notifications>(),
+            currentReminderId: reminderId,
           ),
           // Scaffold wrapper to be able to show SnackBar
           child: Scaffold(

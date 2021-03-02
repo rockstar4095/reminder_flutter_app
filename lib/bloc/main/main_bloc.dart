@@ -1,26 +1,28 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reminder_flutter_app/bloc/main/main_event.dart';
 import 'package:reminder_flutter_app/model/reminder.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
+import 'package:reminder_flutter_app/utils/notifications.dart';
 
 part 'main_state.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> {
-  final MainRepository _repository;
-  final notificationsPlugin = FlutterLocalNotificationsPlugin()
-    ..initialize(InitializationSettings(
-      android: AndroidInitializationSettings('ic_notification'),
-    ));
+  final MainRepository repository;
+  final Notifications notifications;
 
-  MainBloc(this._repository) : super(MainState.initialState()) {
+  MainBloc({
+    this.repository,
+    this.notifications,
+  })  : assert(repository != null),
+        assert(notifications != null),
+        super(MainState.initialState()) {
     _loadReminders();
   }
 
   void _loadReminders() async {
-    final reminders = await _repository.getAllReminders();
+    final reminders = await repository.getAllReminders();
     reminders.sort((a, b) => a.dateTime.isAfter(b.dateTime) ? 1 : -1);
     add(RemindersLoaded(reminders: reminders));
   }
@@ -36,6 +38,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         reminders: event.reminders,
         wereTripsLoaded: true,
       );
+
+      _resetNotifications(event.reminders);
     } else if (event is SaveReminderPressed) {
       _loadReminders();
     } else if (event is DeletePressed) {
@@ -77,7 +81,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   Future<void> _deleteReminders() async {
     final reminders = state.reminders.where((it) => it.isSelected).toList();
-    _repository.deleteReminders(reminders);
-    reminders.forEach((it) => notificationsPlugin.cancel(it.id));
+    repository.deleteReminders(reminders);
+    reminders.forEach((reminder) => notifications.cancelNotification(reminder));
   }
+
+  /// resets notifications for all reminders which reminder DateTime is
+  /// more than now.
+  void _resetNotifications(List<Reminder> reminders) => reminders.forEach((e) {
+        if (e.dateTime.isAfter(DateTime.now())) {
+          notifications.saveNotification(e);
+        }
+      });
 }

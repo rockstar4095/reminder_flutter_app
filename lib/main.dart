@@ -12,6 +12,7 @@ import 'package:reminder_flutter_app/generated/l10n.dart';
 import 'package:reminder_flutter_app/repository/main_repository.dart';
 import 'package:reminder_flutter_app/repository_builder.dart';
 import 'package:reminder_flutter_app/screens/mainscreen/main_screen.dart';
+import 'package:reminder_flutter_app/utils/notifications.dart';
 import 'package:reminder_flutter_app/utils/wakelock.dart';
 
 import 'entity/reminder_entity.dart';
@@ -70,6 +71,11 @@ class AppBlocProvider extends StatelessWidget {
 
     provider = RepositoryProvider<WakeLock>(
       create: (context) => Repositories.wakeLock(),
+      child: provider,
+    );
+
+    provider = RepositoryProvider<Notifications>(
+      create: (context) => Repositories.notifications(),
       child: provider,
     );
 
