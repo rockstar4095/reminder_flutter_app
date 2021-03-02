@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "onDateInTime" : m0,
     "reminders" : MessageLookupByLibrary.simpleMessage("Reminders"),
     "saveButton" : MessageLookupByLibrary.simpleMessage("SAVE"),
+    "shopping" : MessageLookupByLibrary.simpleMessage("Shopping"),
+    "shoppingDesc" : MessageLookupByLibrary.simpleMessage("Enter names separated by commas"),
     "specifyTitle" : MessageLookupByLibrary.simpleMessage("Specify title"),
     "titleHint" : MessageLookupByLibrary.simpleMessage("Title")
   };

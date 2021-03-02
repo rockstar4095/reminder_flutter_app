@@ -132,7 +132,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
   Widget _shoppingTitleField() {
     return _titleWrapper(
       title: Text(
-        'Shopping',
+        S.of(context).shopping,
         style: Theme.of(context).textTheme.headline5.copyWith(
               color: Colors.white,
             ),
@@ -177,8 +177,9 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
   Widget _descriptionField(BuildContext context) =>
       BlocBuilder<EditReminderBloc, EditReminderState>(
         buildWhen: (previous, current) =>
-            previous.editedDescription.isEmpty &&
-            current.editedDescription.isNotEmpty,
+            (previous.editedDescription.isEmpty &&
+                current.editedDescription.isNotEmpty) ||
+            previous.isShoppingReminder != current.isShoppingReminder,
         builder: (context, state) {
           // key is used to paste initial value from changing state.
           return Padding(
@@ -188,7 +189,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
               initialValue: state.editedDescription,
               decoration: InputDecoration(
                 hintText: state.isShoppingReminder
-                    ? 'Вводите наименования через запятую'
+                    ? S.of(context).shoppingDesc
                     : S.of(context).descriptionHint,
               ),
               maxLines: state.editedDescription.isEmpty ? 3 : null,
@@ -299,7 +300,7 @@ class _EditReminderDialogState extends State<_EditReminderDialog> {
     return Reminder(
       id: context.read<EditReminderBloc>().currentReminderId,
       title: context.read<EditReminderBloc>().state.isShoppingReminder
-          ? 'Shopping'
+          ? S.of(context).shopping
           : context.read<EditReminderBloc>().title,
       description: context.read<EditReminderBloc>().description,
       dateTime: _getDateTime(context),

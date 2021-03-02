@@ -125,6 +125,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter names separated by commas`
+  String get shoppingDesc {
+    return Intl.message(
+      'Enter names separated by commas',
+      name: 'shoppingDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shopping`
+  String get shopping {
+    return Intl.message(
+      'Shopping',
+      name: 'shopping',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

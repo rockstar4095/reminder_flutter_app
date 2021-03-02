@@ -7,5 +7,7 @@
   "saveButton": "СОХРАНИТЬ",
   "cancelButton": "ОТМЕНА",
   "specifyTitle": "Укажите название",
-  "noRemindersHint": "Список напоминаний пуст"
+  "noRemindersHint": "Список напоминаний пуст",
+  "shoppingDesc": "Вводите наименования через запятую",
+  "shopping": "Покупки"
 }

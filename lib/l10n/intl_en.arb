@@ -7,5 +7,7 @@
   "saveButton": "SAVE",
   "cancelButton": "CANCEL",
   "specifyTitle": "Specify title",
-  "noRemindersHint": "Reminders list is empty"
+  "noRemindersHint": "Reminders list is empty",
+  "shoppingDesc": "Enter names separated by commas",
+  "shopping": "Shopping"
 }

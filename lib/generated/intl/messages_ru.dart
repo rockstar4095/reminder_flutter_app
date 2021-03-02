@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "onDateInTime" : m0,
     "reminders" : MessageLookupByLibrary.simpleMessage("Напоминания"),
     "saveButton" : MessageLookupByLibrary.simpleMessage("СОХРАНИТЬ"),
+    "shopping" : MessageLookupByLibrary.simpleMessage("Покупки"),
+    "shoppingDesc" : MessageLookupByLibrary.simpleMessage("Вводите наименования через запятую"),
     "specifyTitle" : MessageLookupByLibrary.simpleMessage("Укажите название"),
     "titleHint" : MessageLookupByLibrary.simpleMessage("Название")
   };
