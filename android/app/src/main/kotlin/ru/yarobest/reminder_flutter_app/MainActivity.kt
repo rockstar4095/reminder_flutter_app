@@ -1,4 +1,4 @@
-package com.example.reminder_flutter_app
+package ru.yarobest.reminder_flutter_app
 
 import android.content.ContentResolver
 import android.content.Context
